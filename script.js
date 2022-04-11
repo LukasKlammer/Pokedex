@@ -25,7 +25,7 @@ function renderPokemonInfo() {
     let pokemonID = currentPokemon['id'];
 
     document.getElementById('pokemons-container').innerHTML += /*html*/ `
-        <div class="pokemon-box">
+        <div class="pokemon-box" onclick="openPokemon(${pokemonID})">
             <span>${pokemonID}</span>
             <img class="pokemon-image" src="${pokemonImage}" alt="">
             <span class="pokemon-name">${pokemonName}</span>
@@ -33,7 +33,6 @@ function renderPokemonInfo() {
                 <div id="pokemon-type">${pokemonType}</div>
             </div>
         </div>
-
     `;
 }
 
