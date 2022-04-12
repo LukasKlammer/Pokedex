@@ -1,14 +1,37 @@
-let currentPokemon; // globale Variable, brauchen wir in mehreren Funktionen
+let currentPokemon; // global variable, is needet in many functions
 let namesOfAllPokemon = [];
+let allPokemon = [];
 let start = 1;
 let stop = 21;
+
+let colors = {
+    normal: '#A8A77A',
+    fire: '#EE8130',
+    water: '#6390F0',
+    electric: '#F7D02C',
+    grass: '#7AC74C',
+    ice: '#96D9D6',
+    fighting: '#C22E28',
+    poison: '#A33EA1',
+    ground: '#E2BF65',
+    flying: '#A98FF3',
+    psychic: '#F95587',
+    bug: '#A6B91A',
+    rock: '#B6A136',
+    ghost: '#735797',
+    dragon: '#6F35FC',
+    dark: '#705746',
+    steel: '#B7B7CE',
+    fairy: '#D685AD',
+}
+
 
 function init() {
     loadAllPokemonNames();
     loadPokemon();
 }
 
-/**lädt mit eigener Abfrage alle Namen der Pokemons. Über 1000 Namen. Pusht sie ein eigenes Array. Nötig für autocomplete im input Feld */
+/**loads all Pokemon-Names. Over 1000 Names. Pushs them in an array. Necessary for autocomplete-input-field */
 async function loadAllPokemonNames() {
     let url = 'https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0';
     let response = await fetch(url);
@@ -24,7 +47,7 @@ function renderHomeScreen() {
     document.getElementById('pokemons-container').innerHTML = '';
     start = 1;  // könnte man vielleicht bereits geladene Dateien rendern? Cache?
     stop = 21;
-    loadPokemon(); 
+    loadPokemon();
 }
 
 
@@ -44,13 +67,16 @@ async function loadPokemon() {
 
 
 function renderPokemon() {
-    let pokemonImage = currentPokemon['sprites']['front_shiny'];
-    let pokemonName = currentPokemon['name'];
-    let pokemonTypes = currentPokemon['types'];
     let pokemonID = currentPokemon['id'];
+    let pokemonName = currentPokemon['name'];
+    let pokemonImage = currentPokemon['sprites']['front_shiny'];
+    let pokemonTypes = currentPokemon['types'];
+    let pokemonMainType = currentPokemon['types'][0]['type']['name'];
+    let pokemonColor = colors[pokemonMainType];
+
     let pokemonsContainer = document.getElementById('pokemons-container');
 
-    pokemonsContainer.innerHTML += templatePokemon(pokemonID, pokemonName, pokemonImage);
+    pokemonsContainer.innerHTML += templatePokemon(pokemonID, pokemonName, pokemonImage, pokemonColor);
     renderPokemonTypes(pokemonID, pokemonTypes);
 }
 
@@ -65,12 +91,18 @@ function renderPokemonTypes(pokemonID, pokemonTypes) {
 
 }
 
+/**when you are near the bottom of Site --> load more Pokemons */
+function lazyLoading() {
+    if ((window.innerHeight + window.scrollY + 100) >= document.body.offsetHeight) {
+        loadMorePokemon();
+    }
+}
+
 
 function loadMorePokemon() {
     start += 20;
     stop += 20;
     loadPokemon();
-
 }
 
 

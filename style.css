@@ -111,7 +111,7 @@ h1 {
     position: relative;
     background-color: #70C1B3;
     min-width: 270px;
-    min-height: 160px;
+    min-height: 180px;
     padding: 24px;
     display: flex;
     flex-direction: column;
@@ -159,7 +159,7 @@ h1 {
 }
 
 .type {
-    background-color: #301A4B;
+    background-color: #4c2d72;
     padding: 8px;
     text-align: center;
     border-radius: 8px;

@@ -17,7 +17,7 @@
     <script src="templates.js"></script>
 </head>
 
-<body onload="init()">
+<body onload="init()" onscroll="lazyLoading()">
 
 
 
@@ -39,9 +39,6 @@
     <div id="pokemons-container">
 
     </div>
-
-    <button class="load-more-button" onclick="loadMorePokemon()">loadMorePokemon (wird später als lazy loading implementiert)</button>
-
 
 </body>
 
