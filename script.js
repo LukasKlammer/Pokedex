@@ -1,5 +1,27 @@
 let currentPokemon; // globale Variable, brauchen wir in mehreren Funktionen
 
+
+function searchPokemon() {
+    
+    let searchItem = document.getElementById('search-input').value;
+    
+}
+
+
+function hideMagnifyingGlass() {
+    document.getElementById('magnifying-glass').classList.add('d-none');
+}
+
+
+function showMagnifyingGlass() {
+    document.getElementById('magnifying-glass').classList.remove('d-none');
+}
+
+
+function deleteSearchInput() {
+    document.getElementById('search-input').value = '';
+}
+
 async function loadPokemon() {
 
     for (let i = 1; i < 10; i++) {
