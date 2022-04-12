@@ -26,7 +26,8 @@
             <h1 class="headline">Pokedex</h1>
             <div class="search-box">
                 <img id="magnifying-glass" src="img/magnifying-glass-3-24.png" alt="">
-                <input onclick="hideMagnifyingGlass()" onkeyup="searchPokemon()" onfocusout="showMagnifyingGlass()" type="text" id="search-input" placeholder="Suchen">
+                <input onclick="hideMagnifyingGlass()" onkeyup="searchPokemon()" onfocusout="showMagnifyingGlass()"
+                    type="text" id="search-input" placeholder="Suchen">
                 <img id="delete-search-input" onclick="deleteSearchInput()" src="img/close-window-24.png" alt="">
             </div>
             <div class="header-icon-box">
@@ -37,6 +38,17 @@
     </div>
 
     <div id="pokemons-container">
+
+    </div>
+
+    <button onclick="loadMorePokemon()">loadMorePokemon</button>
+
+
+    <div id="overlay" onclick="closeOverlay()">
+        <div id="pokemon-detail-card">
+
+
+        </div>
 
     </div>
 

@@ -1,6 +1,7 @@
 let currentPokemon; // global variable, is needet in many functions
 let namesOfAllPokemon = [];
 let allPokemon = [];
+let favouritePokemons = [];
 let start = 1;
 let stop = 21;
 
@@ -26,9 +27,12 @@ let colors = {
 }
 
 
-function init() {
+async function init() {
     loadAllPokemonNames();
-    loadPokemon();
+    await loadPokemon();
+    sortPokemon();
+    renderPokemon();
+
 }
 
 /**loads all Pokemon-Names. Over 1000 Names. Pushs them in an array. Necessary for autocomplete-input-field */
@@ -45,9 +49,7 @@ async function loadAllPokemonNames() {
 
 function renderHomeScreen() {
     document.getElementById('pokemons-container').innerHTML = '';
-    start = 1;  // könnte man vielleicht bereits geladene Dateien rendern? Cache?
-    stop = 21;
-    loadPokemon();
+    renderPokemon();
 }
 
 
@@ -56,28 +58,45 @@ function renderFavouritePokemons() {
     document.getElementById('pokemons-container').innerHTML = 'Funktion wird noch implementiert'
 }
 
+
 async function loadPokemon() {
     for (let i = start; i < stop; i++) {
         let url = `https://pokeapi.co/api/v2/pokemon/${i}`;
         let response = await fetch(url);
         currentPokemon = await response.json();
-        renderPokemon();
+        allPokemon.push(currentPokemon);
     }
 }
 
 
+function sortPokemon() {
+    allPokemon = allPokemon.sort(function(a,b){
+        return a-b
+    });
+    console.log(allPokemon);
+    
+    //TODO sort Funktion --> soll array nach ... sortieren () → weil Pokemon nicht ganz gleiche Ladezeit haben - das eine kommt schneller, das andere etwas später; das gleichzeitige Laden ist allerdings hilfreich
+    //alle gleichzeitigl laden, am Ende alle Pokemon sortieren
+    //Google Suche: Javascript sort json array by field → array.sort Funktion
+
+}
+
+
 function renderPokemon() {
-    let pokemonID = currentPokemon['id'];
-    let pokemonName = currentPokemon['name'];
-    let pokemonImage = currentPokemon['sprites']['front_shiny'];
-    let pokemonTypes = currentPokemon['types'];
-    let pokemonMainType = currentPokemon['types'][0]['type']['name'];
-    let pokemonColor = colors[pokemonMainType];
-
     let pokemonsContainer = document.getElementById('pokemons-container');
+    pokemonsContainer.innerHTML='';
 
-    pokemonsContainer.innerHTML += templatePokemon(pokemonID, pokemonName, pokemonImage, pokemonColor);
-    renderPokemonTypes(pokemonID, pokemonTypes);
+    for (let i = 0; i < allPokemon.length; i++) {
+        let pokemonID = allPokemon[i]['id'];
+        let pokemonName = allPokemon[i]['name'];
+        let pokemonImage = allPokemon[i]['sprites']['front_shiny'];
+        let pokemonTypes = allPokemon[i]['types'];
+        let pokemonMainType = allPokemon[i]['types'][0]['type']['name'];
+        let pokemonColor = colors[pokemonMainType];
+
+        pokemonsContainer.innerHTML += templatePokemon(pokemonID, pokemonName, pokemonImage, pokemonColor);
+        renderPokemonTypes(pokemonID, pokemonTypes);
+    }
 }
 
 
@@ -88,25 +107,28 @@ function renderPokemonTypes(pokemonID, pokemonTypes) {
             <span class="type">${pokemonType}</span>
         `;
     }
-
 }
 
 /**when you are near the bottom of Site --> load more Pokemons */
 function lazyLoading() {
     if ((window.innerHeight + window.scrollY + 100) >= document.body.offsetHeight) {
-        loadMorePokemon();
+        // loadMorePokemon();
+        console.log('Aufruf lazy loading - viel zu oft')
     }
 }
 
 
-function loadMorePokemon() {
+async function loadMorePokemon() {
     start += 20;
     stop += 20;
-    loadPokemon();
+    await loadPokemon();
+    sortPokemon();
+    renderPokemon();
 }
 
 
 function openPokemon(i) {
+    openOverlay();
     alert('noch nicht implementiert - Nummer: ' + i);
 }
 
@@ -128,4 +150,14 @@ function showMagnifyingGlass() {
 
 function deleteSearchInput() {
     document.getElementById('search-input').value = '';
+}
+
+
+function closeOverlay() {
+    document.getElementById('overlay').classList.add('d-none');
+}
+
+
+function openOverlay() {
+    document.getElementById('overlay').classList.remove('d-none');
 }
