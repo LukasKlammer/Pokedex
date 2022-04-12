@@ -1,10 +1,86 @@
 let currentPokemon; // globale Variable, brauchen wir in mehreren Funktionen
+let namesOfAllPokemon = [];
+let start = 1;
+let stop = 21;
+
+function init() {
+    loadAllPokemonNames();
+    loadPokemon();
+}
+
+/**lädt mit eigener Abfrage alle Namen der Pokemons. Über 1000 Namen. Pusht sie ein eigenes Array. Nötig für autocomplete im input Feld */
+async function loadAllPokemonNames() {
+    let url = 'https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0';
+    let response = await fetch(url);
+    let pokemons = await response.json();
+    for (let i = 0; i < pokemons['results'].length; i++) {
+        singlePokemonName = pokemons['results'][i]['name'];
+        namesOfAllPokemon.push(singlePokemonName);
+    }
+}
+
+
+function renderHomeScreen() {
+    document.getElementById('pokemons-container').innerHTML = '';
+    start = 1;  // könnte man vielleicht bereits geladene Dateien rendern? Cache?
+    stop = 21;
+    loadPokemon(); 
+}
+
+
+function renderFavouritePokemons() {
+    document.getElementById('pokemons-container').innerHTML = '';
+    document.getElementById('pokemons-container').innerHTML = 'Funktion wird noch implementiert'
+}
+
+async function loadPokemon() {
+    for (let i = start; i < stop; i++) {
+        let url = `https://pokeapi.co/api/v2/pokemon/${i}`;
+        let response = await fetch(url);
+        currentPokemon = await response.json();
+        renderPokemon();
+    }
+}
+
+
+function renderPokemon() {
+    let pokemonImage = currentPokemon['sprites']['front_shiny'];
+    let pokemonName = currentPokemon['name'];
+    let pokemonTypes = currentPokemon['types'];
+    let pokemonID = currentPokemon['id'];
+    let pokemonsContainer = document.getElementById('pokemons-container');
+
+    pokemonsContainer.innerHTML += templatePokemon(pokemonID, pokemonName, pokemonImage);
+    renderPokemonTypes(pokemonID, pokemonTypes);
+}
+
+
+function renderPokemonTypes(pokemonID, pokemonTypes) {
+    for (let j = 0; j < pokemonTypes.length; j++) {
+        const pokemonType = pokemonTypes[j]['type']['name'];
+        document.getElementById(`pokemon-type-container-${pokemonID}`).innerHTML += /*html*/ `
+            <span class="type">${pokemonType}</span>
+        `;
+    }
+
+}
+
+
+function loadMorePokemon() {
+    start += 20;
+    stop += 20;
+    loadPokemon();
+
+}
+
+
+function openPokemon(i) {
+    alert('noch nicht implementiert - Nummer: ' + i);
+}
 
 
 function searchPokemon() {
-    
     let searchItem = document.getElementById('search-input').value;
-    
 }
 
 
@@ -20,45 +96,4 @@ function showMagnifyingGlass() {
 
 function deleteSearchInput() {
     document.getElementById('search-input').value = '';
-}
-
-async function loadPokemon() {
-
-    for (let i = 1; i < 10; i++) {
-        let url = `https://pokeapi.co/api/v2/pokemon/${i}`;
-        let response = await fetch(url);
-        console.log(response.ok); // gibt true oder false zurück, nachdem fetch() ausgeführt wurde
-        console.log(response.status); // gibt Status-Code zurück, nachdem fetch() ausgeführt wurde (z. B. 404 wenn Tippfehler in url)
-        currentPokemon = await response.json();
-        console.log(currentPokemon);
-
-        renderPokemonInfo();
-
-    }
-    
-
-}
-
-
-function renderPokemonInfo() {
-    let pokemonImage = currentPokemon['sprites']['front_shiny'];
-    let pokemonName = currentPokemon['name'];
-    let pokemonType = currentPokemon['types'][0]['type']['name'];
-    let pokemonID = currentPokemon['id'];
-
-    document.getElementById('pokemons-container').innerHTML += /*html*/ `
-        <div class="pokemon-box" onclick="openPokemon(${pokemonID})">
-            <span>${pokemonID}</span>
-            <img class="pokemon-image" src="${pokemonImage}" alt="">
-            <span class="pokemon-name">${pokemonName}</span>
-            <div class="pokemon-type-container">
-                <div id="pokemon-type">${pokemonType}</div>
-            </div>
-        </div>
-    `;
-}
-
-
-function loadMorePokemon() {
-    //TODO: wenn im body ganz unten oder per Knopfdruck 20 Pokemon mehr laden
 }

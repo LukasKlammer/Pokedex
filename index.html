@@ -14,9 +14,10 @@
         href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700&display=swap"
         rel="stylesheet">
     <script src="script.js"></script>
+    <script src="templates.js"></script>
 </head>
 
-<body onload="loadPokemon()">
+<body onload="init()">
 
 
 
@@ -29,41 +30,17 @@
                 <img id="delete-search-input" onclick="deleteSearchInput()" src="img/close-window-24.png" alt="">
             </div>
             <div class="header-icon-box">
-                <img onclick="renderPokemon()" src="img/pokeball.png" alt="">
-                <img onclick="renderFavouritePokemon()" src="img/heart-69-48.png" alt="">
+                <img onclick="renderHomeScreen()" src="img/pokeball.png" alt="">
+                <img onclick="renderFavouritePokemons()" src="img/heart-69-48.png" alt="">
             </div>
         </div>
     </div>
 
     <div id="pokemons-container">
 
-        <div onclick="openPokemon(1)" class="pokemon-box">
-            <div class="name-id-box">
-                <h1 id="pokemon-name">shellder</h1>
-                <span id="pokemon-id">#001</span>
-            </div>
-            <div id="pokemon-type-container-1" class="pokemon-type-container">
-                <span class="type">
-                    Grass
-                </span>
-                <span class="type">
-                    Poison
-                </span>
-                <span class="type">
-                    Poison
-                </span>
-
-            </div>
-            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/3.png" alt="">
-        </div>
-
-
-
     </div>
 
-
-
-
+    <button class="load-more-button" onclick="loadMorePokemon()">loadMorePokemon (wird später als lazy loading implementiert)</button>
 
 
 </body>
