@@ -1,7 +1,7 @@
 let currentPokemon; // global variable, is needet in many functions
-let namesOfAllPokemon = [];
-let allPokemon = [];
-let favouritePokemons = [];
+let namesOfAllPokemon = []; // we load at the program-start all names --> needed for the autocomplete input field
+let allLoadedPokemon = []; // here we push all the loaded pokemons. that are not all, because we load lazy
+let favouritePokemons = [];  // we will push here the pokemons that we like much
 let start = 1;
 let stop = 21;
 
@@ -32,7 +32,6 @@ async function init() {
     await loadPokemon();
     sortPokemon();
     renderPokemon();
-
 }
 
 /**loads all Pokemon-Names. Over 1000 Names. Pushs them in an array. Necessary for autocomplete-input-field */
@@ -64,16 +63,16 @@ async function loadPokemon() {
         let url = `https://pokeapi.co/api/v2/pokemon/${i}`;
         let response = await fetch(url);
         currentPokemon = await response.json();
-        allPokemon.push(currentPokemon);
+        allLoadedPokemon.push(currentPokemon);
     }
 }
 
 
 function sortPokemon() {
-    allPokemon = allPokemon.sort(function(a,b){
+    allLoadedPokemon = allLoadedPokemon.sort(function(a,b){
         return a-b
     });
-    console.log(allPokemon);
+    console.log(allLoadedPokemon);
     
     //TODO sort Funktion --> soll array nach ... sortieren () → weil Pokemon nicht ganz gleiche Ladezeit haben - das eine kommt schneller, das andere etwas später; das gleichzeitige Laden ist allerdings hilfreich
     //alle gleichzeitigl laden, am Ende alle Pokemon sortieren
@@ -86,12 +85,12 @@ function renderPokemon() {
     let pokemonsContainer = document.getElementById('pokemons-container');
     pokemonsContainer.innerHTML='';
 
-    for (let i = 0; i < allPokemon.length; i++) {
-        let pokemonID = allPokemon[i]['id'];
-        let pokemonName = allPokemon[i]['name'];
-        let pokemonImage = allPokemon[i]['sprites']['front_shiny'];
-        let pokemonTypes = allPokemon[i]['types'];
-        let pokemonMainType = allPokemon[i]['types'][0]['type']['name'];
+    for (let i = 0; i < allLoadedPokemon.length; i++) {
+        let pokemonID = allLoadedPokemon[i]['id'];
+        let pokemonName = allLoadedPokemon[i]['name'];
+        let pokemonImage = allLoadedPokemon[i]['sprites']['front_shiny'];
+        let pokemonTypes = allLoadedPokemon[i]['types'];
+        let pokemonMainType = allLoadedPokemon[i]['types'][0]['type']['name'];
         let pokemonColor = colors[pokemonMainType];
 
         pokemonsContainer.innerHTML += templatePokemon(pokemonID, pokemonName, pokemonImage, pokemonColor);

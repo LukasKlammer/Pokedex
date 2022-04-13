@@ -187,6 +187,50 @@ h1 {
     z-index: 10;
     width: 500px;
     height: 800px;
-    background-color: white;
-    border-radius: 16px;
+    border-radius: 22px;
+    display: flex;
+    flex-direction: column;
 }
+
+#pokemon-detail-card-top {
+    height: 50%;
+    background-color: orange;
+    border-top-left-radius: 22px;
+    border-top-right-radius: 22px;
+}
+
+#pokemon-detail-card-bottom {
+    flex: 1;
+    background-color: white;
+    border-radius: 22px;
+    margin-top: -22px;
+}
+
+.arrow-and-heart {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.name-types-id-box {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.name-types-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.pokemon-image-box {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.pokemon-image {
+    width: 250px;
+    margin-top: -220px;
+}
+
