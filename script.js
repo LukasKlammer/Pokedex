@@ -4,6 +4,7 @@ let allLoadedPokemon = []; // here we push all the loaded pokemons. that are not
 let favouritePokemons = [];  // we will push here the pokemons that we like much
 let start = 1;
 let stop = 21;
+let allowLoadNextPokemons = false;
 
 let colors = {
     normal: '#A8A77A',
@@ -76,6 +77,7 @@ function sortPokemon() {
 }
 
 
+/**renders the pokemons, that we have already loaded */
 function renderPokemon() {
     let pokemonsContainer = document.getElementById('pokemons-container');
     pokemonsContainer.innerHTML='';
@@ -91,6 +93,7 @@ function renderPokemon() {
         pokemonsContainer.innerHTML += templatePokemon(pokemonID, pokemonName, pokemonImage, pokemonColor);
         renderPokemonTypes(pokemonID, pokemonTypes);
     }
+    allowLoadNextPokemons = true; // after the rendering of all pokemon it is possible to load next pokemon
 }
 
 
@@ -101,11 +104,13 @@ function renderPokemonTypes(pokemonID, pokemonTypes) {
     }
 }
 
+
+
 /**when you are near the bottom of Site --> load more Pokemons */
 function lazyLoading() {
-    if ((window.innerHeight + window.scrollY + 100) >= document.body.offsetHeight) {
-        // loadMorePokemon();
-        console.log('Aufruf lazy loading - viel zu oft')
+    if ((window.innerHeight + window.scrollY + 100) >= document.body.offsetHeight && allowLoadNextPokemons) {
+        allowLoadNextPokemons = false;
+        loadMorePokemon();
     }
 }
 
