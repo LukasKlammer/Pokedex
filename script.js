@@ -72,11 +72,6 @@ function sortPokemon() {
     allLoadedPokemon = allLoadedPokemon.sort(function(a,b){
         return a-b
     });
-    console.log(allLoadedPokemon);
-    
-    //TODO sort Funktion --> soll array nach ... sortieren () → weil Pokemon nicht ganz gleiche Ladezeit haben - das eine kommt schneller, das andere etwas später; das gleichzeitige Laden ist allerdings hilfreich
-    //alle gleichzeitigl laden, am Ende alle Pokemon sortieren
-    //Google Suche: Javascript sort json array by field → array.sort Funktion
 
 }
 
@@ -102,9 +97,7 @@ function renderPokemon() {
 function renderPokemonTypes(pokemonID, pokemonTypes) {
     for (let j = 0; j < pokemonTypes.length; j++) {
         const pokemonType = pokemonTypes[j]['type']['name'];
-        document.getElementById(`pokemon-type-container-${pokemonID}`).innerHTML += /*html*/ `
-            <span class="type">${pokemonType}</span>
-        `;
+        document.getElementById(`pokemon-type-container-${pokemonID}`).innerHTML += templateType(pokemonType);
     }
 }
 
@@ -128,7 +121,14 @@ async function loadMorePokemon() {
 
 function openPokemon(i) {
     openOverlay();
-    alert('noch nicht implementiert - Nummer: ' + i);
+    let elem = document.getElementById('pokemon-detail-card'); // brings the whole card to a variable
+    elem.addEventListener("click", stopEvent, false); // adds a event listener: when someone clicks the funktion stopEvent will be called
+}
+
+
+/**prevents closing the overlay clicking on the pokemon detail card */
+function stopEvent(ev) {
+    ev.stopPropagation();
 }
 
 
@@ -159,4 +159,13 @@ function closeOverlay() {
 
 function openOverlay() {
     document.getElementById('overlay').classList.remove('d-none');
+}
+
+
+/**renders the properties in the pokemon detail card */
+function renderProperties(choice) {
+    //TODO render the box with properties
+    //make active the choosen link with javascript
+    console.log(choice)
+    document.getElementById(choice).classList.add('choose-property-selected');
 }

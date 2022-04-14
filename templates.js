@@ -12,3 +12,10 @@ function templatePokemon(pokemonID, pokemonName, pokemonImage, pokemonColor) {
     </div>
 `;
 }
+
+
+function templateType(pokemonType) {
+    return  /*html*/ `
+    <p class="type">${pokemonType}</p>
+`;
+}
