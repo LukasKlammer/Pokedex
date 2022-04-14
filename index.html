@@ -41,77 +41,10 @@
 
     </div>
 
-    <button onclick="loadMorePokemon()">loadMorePokemon</button>
 
-
-    <div id="overlay" onclick="closeOverlay()">
+    <div id="overlay" class="d-none" onclick="closeOverlay()">
         <div id="pokemon-detail-card">
-            <div class="pokemon-detail-card-top">
-                <div class="arrow-and-heart">
-                    <img src="img/arrow-back.png" onclick="closeOverlay()" alt="closeArrow">
-                    <img src="img/baseline_favorite_border_white_48dp.png">
-                </div>
-                <div class="name-types-id-box">
-                    <div class="name-types-box">
-                        <h1>
-                            Name
-                        </h1>
-                        <div>
-                            <p class="type">normal</p>
-                            <p class="type">fire</p>
-                        </div>
-                    </div>
-                    <span>
-                        #001
-                    </span>
-                </div>
-            </div>
-            <div class="pokemon-detail-card-bottom">
-                <div class="pokemon-image-box">
-                    <img class="pokemon-image" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/12.png" alt="pokemonimage">
-                </div>
-                <div class="choose-properties">
-                    <h4 id="about" onclick="renderProperties('about')">about</h4>
-                    <h4 id="basestats" onclick="renderProperties('basestats')">basestats</h4>
-                    <h4 id="evolution" onclick="renderProperties('evolution')">evolution</h4>
-                    <h4 id="moves" onclick="renderProperties('moves')">moves</h4>
-                </div>
-                <div id="about-box">
-                    <table>
-                        <tr>
-                            <td>Species</td>
-                            <td>Seed</td>
-                        </tr>
-                        <tr>
-                            <td>Height</td>
-                            <td>20 cm</td>
-                        </tr>
-                        <tr>
-                            <td>Weight</td>
-                            <td>8.9 kg</td>
-                        </tr>
-                        <tr>
-                            <td>Abilities</td>
-                            <td>Overgrow, Chlorophyll</td>
-                        </tr>
-                    </table>
-                    <h4>Breeding</h4>
-                    <table>
-                        <tr>
-                            <td>Gender</td>
-                            <td>männlich, weiblich %</td>
-                        </tr>
-                        <tr>
-                            <td>Egg Groups</td>
-                            <td>Monster</td>
-                        </tr>
-                        <tr>
-                            <td>Egg Cycle</td>
-                            <td>Grass</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+
         </div>
     </div>
 

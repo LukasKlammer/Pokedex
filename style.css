@@ -145,7 +145,7 @@ h1 {
     margin-bottom: 24px;
 }
 
-#pokemon-id {
+.pokemon-id {
     background-color: #5F5449;
     padding: 8px;
     border-radius: 8px;
@@ -198,7 +198,6 @@ h1 {
     height: 40%;
     padding: 30px;
     padding-top: 48px;
-    background-color: orange;
     border-top-left-radius: 22px;
     border-top-right-radius: 22px;
     color: white;
@@ -249,7 +248,7 @@ h1 {
 
 .pokemon-image {
     width: 200px;
-    margin-top: -150px;
+    margin-top: -180px;
 }
 
 .choose-properties {
