@@ -30,6 +30,7 @@ let colors = {
 
 
 async function init() {
+    loadFromLocalStorage();
     loadAllPokemonNames();
     await loadPokemon();
     sortPokemon();
@@ -144,7 +145,7 @@ function renderDetailCard(detailCardContainer, i) {
     let pokemonColor = colors[allLoadedPokemon[i]['types'][0]['type']['name']];
 
     detailCardContainer.innerHTML = templateDetailCard(i, pokemonColor);
-    
+
     renderTypes(i);
     renderProperties(i, 'about'); // at first load render the pokemon properties "about"
 }
@@ -181,9 +182,9 @@ function renderAbilities(i) {
     let lastAbilityID; // variable for searching the last ability. Is needet to remove the semicolon at the end of the abilities-list
 
     if (pokemonAbilities.length > 0) {
-            for (let j = 0; j < pokemonAbilities.length; j++) {
-                const pokemonAbility = pokemonAbilities[j]['ability']['name'];
-                abilitiesBox.innerHTML += templateAbilities(j, pokemonAbility);
+        for (let j = 0; j < pokemonAbilities.length; j++) {
+            const pokemonAbility = pokemonAbilities[j]['ability']['name'];
+            abilitiesBox.innerHTML += templateAbilities(j, pokemonAbility);
             lastAbilityID = `ability_${j}`;
         }
         document.getElementById(lastAbilityID).innerHTML = document.getElementById(lastAbilityID).innerHTML.slice(0, -1); // removes the semicolon at last ability
@@ -209,8 +210,36 @@ function renderMoves(i, propertiesBox) {
 
 
 function favouriteOrUnfavourite(i) {
-    alert('not yet implemented');
     let icon = document.getElementById('favourite-icon-detailcard');
+    addToFavourites(i);
+    saveInLocalStorage();
+    console.log(favouritePokemons);
+
+    // if (favouritePokemons contains pokemon i) {
+    //     unfavourite
+    //      change icon
+    // }
+    // else {
+    //     favourite
+    //      change icon
+    // }
+}
+
+
+function addToFavourites(i) {
+    let toAddPokemon = allLoadedPokemon[i];
+    favouritePokemons.push(toAddPokemon);
+
+}
+
+
+function removeFromFavourites() {
+
+}
+
+
+function searchInFavourites() {
+
 }
 
 
@@ -247,11 +276,10 @@ function openOverlay() {
 
 /**renders the properties in the pokemon detail card */
 function renderProperties(i, choice) {
-    //TODO make active the choosen link with javascript
 
     let propertiesBox = document.getElementById('properties-box');
     propertiesBox.innerHTML = '';
-    
+
     if (choice == 'about') {
         renderAboutBox(i, propertiesBox);
         document.getElementById('about').classList.add('navigation-active');
@@ -279,4 +307,18 @@ function changeNavigation(clickedElement) {
         link.classList.remove('navigation-active')
     }
     clickedElement.classList.add('navigation-active')
+}
+
+
+function saveInLocalStorage() {
+    let favouritePokemonsAsText = JSON.stringify(favouritePokemons);
+    localStorage.setItem('favourites', favouritePokemonsAsText);
+}
+
+
+function loadFromLocalStorage() {
+    let favouritePokemonsAsText = localStorage.getItem('favourites');
+    if (favouritePokemonsAsText) {
+        favouritePokemons = JSON.parse(favouritePokemonsAsText);
+    }
 }
