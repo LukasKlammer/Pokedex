@@ -90,7 +90,7 @@ function renderFavouritePokemons() {
 
 async function loadPokemon() {
     for (let i = start; i &lt; stop; i++) {
-        if (i &lt; numberOfAllPokemons) {
+        if (i &lt;= numberOfAllPokemons) { // check, if we are at last available pokemon API element
             let url = `https://pokeapi.co/api/v2/pokemon/${i}`;
             let response = await fetch(url);
             currentPokemon = await response.json();
@@ -172,9 +172,9 @@ function renderDetailCard(detailCardContainer, i) {
     let pokemonColor = colors[allLoadedPokemon[i]['types'][0]['type']['name']];
 
     detailCardContainer.innerHTML = templateDetailCard(i, pokemonColor);
-
+    
     renderTypes(i);
-    renderAboutBox(i);
+    renderProperties(i, 'about'); // at first load render the pokemon properties "about"
 }
 
 
@@ -188,69 +188,51 @@ function renderTypes(i) {
 }
 
 
-function renderAboutBox(i) {
-    let aboutBox = document.getElementById('about-box');
-    let weightInKg = allLoadedPokemon[i]['weight'] / 10; // because API gives weight in hectogram
+function renderAboutBox(i, propertiesBox) {
     let heigtInCm = allLoadedPokemon[i]['height'] * 10; // API gives heigt in decimeters
+    let weightInKg = allLoadedPokemon[i]['weight'] / 10; // because API gives weight in hectogram
 
-    aboutBox.innerHTML = /*html*/ `
-        &lt;table>
-            &lt;tr>
-                &lt;td>Height&lt;/td>
-                &lt;td>${heigtInCm} cm&lt;/td>
-            &lt;/tr>
-            &lt;tr>
-                &lt;td>Weight&lt;/td>
-                &lt;td>${weightInKg} kg&lt;/td>
-            &lt;/tr>
-            &lt;tr id="abilities-table-row">
-                &lt;td>Abilities&lt;/td>
-                &lt;td id="abilities-box">&lt;/td>
-            &lt;/tr>
-        &lt;/table>
-        &lt;h4>Breeding&lt;/h4>
-        &lt;table>
-            &lt;tr>
-                &lt;td>Gender&lt;/td>
-                &lt;td>männlich, weiblich %&lt;/td>
-            &lt;/tr>
-            &lt;tr>
-                &lt;td>Egg Groups&lt;/td>
-                &lt;td>Monster&lt;/td>
-            &lt;/tr>
-            &lt;tr>
-                &lt;td>Egg Cycle&lt;/td>
-                &lt;td>Grass&lt;/td>
-            &lt;/tr>
-        &lt;/table>
-    `;
+    propertiesBox.innerHTML = templateAboutBox(heigtInCm, weightInKg);
 
     renderAbilities(i);
 }
 
+
 /**
- * Dies ist ein Test für JsDOC
+ * renders the abilities of one pokemon in the detail card
  * 
- * @param {*integer} i This is the variable of current showed pokemon. 
+ * @param {integer} i This is the variable of current showed pokemon. 
  */
 function renderAbilities(i) {
     let abilitiesBox = document.getElementById('abilities-box');
     let pokemonAbilities = allLoadedPokemon[i]['abilities'];
-    let lastAbility; // variable for searching the last ability. Is needet for cut the semicolon at the end of the abilities-list
+    let lastAbilityID; // variable for searching the last ability. Is needet to remove the semicolon at the end of the abilities-list
 
     if (pokemonAbilities.length > 0) {
             for (let j = 0; j &lt; pokemonAbilities.length; j++) {
                 const pokemonAbility = pokemonAbilities[j]['ability']['name'];
-                abilitiesBox.innerHTML += /*html*/ `
-                &lt;span id="ability_${j}">${pokemonAbility},&lt;/span>
-            `;
-            lastAbility = `ability_${j}`;
+                abilitiesBox.innerHTML += templateAbilities(j, pokemonAbility);
+            lastAbilityID = `ability_${j}`;
         }
-        console.log(lastAbility); //TODO: implement .slice method to cancel the last ,
-
+        document.getElementById(lastAbilityID).innerHTML = document.getElementById(lastAbilityID).innerHTML.slice(0, -1); // removes the semicolon at last ability
     } else {
         document.getElementById('abilities-table-row').classList.add('d-none'); // if a pokemon hasn't any ability we don't need the table row with this data
     }
+}
+
+
+function renderBaseStats(i, propertiesBox) {
+    propertiesBox.innerHTML = templateBaseStats();
+}
+
+
+function renderEvolution(i, propertiesBox) {
+    propertiesBox.innerHTML = templateEvolution();
+}
+
+
+function renderMoves(i, propertiesBox) {
+    propertiesBox.innerHTML = templateMoves();
 }
 
 
@@ -292,10 +274,39 @@ function openOverlay() {
 
 
 /**renders the properties in the pokemon detail card */
-function renderProperties(choice) {
-    //TODO render the box with properties
-    //make active the choosen link with javascript
-    document.getElementById(choice).classList.add('choose-property-selected');
+function renderProperties(i, choice) {
+    //TODO make active the choosen link with javascript
+
+    let propertiesBox = document.getElementById('properties-box');
+    propertiesBox.innerHTML = '';
+    
+    if (choice == 'about') {
+        renderAboutBox(i, propertiesBox);
+        document.getElementById('about').classList.add('navigation-active');
+    }
+    else if (choice == 'basestats') {
+        renderBaseStats(i, propertiesBox);
+    }
+    else if (choice == 'evolution') {
+        renderEvolution(i, propertiesBox);
+    }
+    else if (choice == 'moves') {
+        renderMoves(i, propertiesBox);
+    }
+
+}
+
+/**
+ * this function changes the underline of the navigation links in the detail card
+ * 
+ * @param {} clickedElement this variable comes from the html part (this)
+ */
+function changeNavigation(clickedElement) {
+    const links = document.getElementsByClassName('navigation-link')
+    for (const link of links) {
+        link.classList.remove('navigation-active')
+    }
+    clickedElement.classList.add('navigation-active')
 }</code></pre>
         </article>
     </section>
@@ -306,13 +317,13 @@ function renderProperties(choice) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#lazyLoading">lazyLoading</a></li><li><a href="global.html#loadAllPokemonNames">loadAllPokemonNames</a></li><li><a href="global.html#renderAbilities">renderAbilities</a></li><li><a href="global.html#renderPokemon">renderPokemon</a></li><li><a href="global.html#renderProperties">renderProperties</a></li><li><a href="global.html#stopEvent">stopEvent</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#changeNavigation">changeNavigation</a></li><li><a href="global.html#lazyLoading">lazyLoading</a></li><li><a href="global.html#loadAllPokemonNames">loadAllPokemonNames</a></li><li><a href="global.html#renderAbilities">renderAbilities</a></li><li><a href="global.html#renderPokemon">renderPokemon</a></li><li><a href="global.html#renderProperties">renderProperties</a></li><li><a href="global.html#stopEvent">stopEvent</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Tue Apr 19 2022 10:06:16 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Tue Apr 19 2022 12:35:14 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

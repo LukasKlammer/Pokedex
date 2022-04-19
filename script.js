@@ -144,9 +144,9 @@ function renderDetailCard(detailCardContainer, i) {
     let pokemonColor = colors[allLoadedPokemon[i]['types'][0]['type']['name']];
 
     detailCardContainer.innerHTML = templateDetailCard(i, pokemonColor);
-
+    
     renderTypes(i);
-    renderAboutBox(i);
+    renderProperties(i, 'about'); // at first load render the pokemon properties "about"
 }
 
 
@@ -160,69 +160,51 @@ function renderTypes(i) {
 }
 
 
-function renderAboutBox(i) {
-    let aboutBox = document.getElementById('about-box');
-    let weightInKg = allLoadedPokemon[i]['weight'] / 10; // because API gives weight in hectogram
+function renderAboutBox(i, propertiesBox) {
     let heigtInCm = allLoadedPokemon[i]['height'] * 10; // API gives heigt in decimeters
+    let weightInKg = allLoadedPokemon[i]['weight'] / 10; // because API gives weight in hectogram
 
-    aboutBox.innerHTML = /*html*/ `
-        <table>
-            <tr>
-                <td>Height</td>
-                <td>${heigtInCm} cm</td>
-            </tr>
-            <tr>
-                <td>Weight</td>
-                <td>${weightInKg} kg</td>
-            </tr>
-            <tr id="abilities-table-row">
-                <td>Abilities</td>
-                <td id="abilities-box"></td>
-            </tr>
-        </table>
-        <h4>Breeding</h4>
-        <table>
-            <tr>
-                <td>Gender</td>
-                <td>männlich, weiblich %</td>
-            </tr>
-            <tr>
-                <td>Egg Groups</td>
-                <td>Monster</td>
-            </tr>
-            <tr>
-                <td>Egg Cycle</td>
-                <td>Grass</td>
-            </tr>
-        </table>
-    `;
+    propertiesBox.innerHTML = templateAboutBox(heigtInCm, weightInKg);
 
     renderAbilities(i);
 }
 
+
 /**
- * Dies ist ein Test für JsDOC
+ * renders the abilities of one pokemon in the detail card
  * 
- * @param {*integer} i This is the variable of current showed pokemon. 
+ * @param {integer} i This is the variable of current showed pokemon. 
  */
 function renderAbilities(i) {
     let abilitiesBox = document.getElementById('abilities-box');
     let pokemonAbilities = allLoadedPokemon[i]['abilities'];
-    let lastAbility; // variable for searching the last ability. Is needet for cut the semicolon at the end of the abilities-list
+    let lastAbilityID; // variable for searching the last ability. Is needet to remove the semicolon at the end of the abilities-list
 
     if (pokemonAbilities.length > 0) {
             for (let j = 0; j < pokemonAbilities.length; j++) {
                 const pokemonAbility = pokemonAbilities[j]['ability']['name'];
-                abilitiesBox.innerHTML += /*html*/ `
-                <span id="ability_${j}">${pokemonAbility},</span>
-            `;
-            lastAbility = `ability_${j}`;
+                abilitiesBox.innerHTML += templateAbilities(j, pokemonAbility);
+            lastAbilityID = `ability_${j}`;
         }
-        console.log(lastAbility); //TODO: implement .slice method to cancel the last ,
-
+        document.getElementById(lastAbilityID).innerHTML = document.getElementById(lastAbilityID).innerHTML.slice(0, -1); // removes the semicolon at last ability
     } else {
         document.getElementById('abilities-table-row').classList.add('d-none'); // if a pokemon hasn't any ability we don't need the table row with this data
     }
+}
+
+
+function renderBaseStats(i, propertiesBox) {
+    propertiesBox.innerHTML = templateBaseStats();
+}
+
+
+function renderEvolution(i, propertiesBox) {
+    propertiesBox.innerHTML = templateEvolution();
+}
+
+
+function renderMoves(i, propertiesBox) {
+    propertiesBox.innerHTML = templateMoves();
 }
 
 
@@ -264,8 +246,37 @@ function openOverlay() {
 
 
 /**renders the properties in the pokemon detail card */
-function renderProperties(choice) {
-    //TODO render the box with properties
-    //make active the choosen link with javascript
-    document.getElementById(choice).classList.add('choose-property-selected');
+function renderProperties(i, choice) {
+    //TODO make active the choosen link with javascript
+
+    let propertiesBox = document.getElementById('properties-box');
+    propertiesBox.innerHTML = '';
+    
+    if (choice == 'about') {
+        renderAboutBox(i, propertiesBox);
+        document.getElementById('about').classList.add('navigation-active');
+    }
+    else if (choice == 'basestats') {
+        renderBaseStats(i, propertiesBox);
+    }
+    else if (choice == 'evolution') {
+        renderEvolution(i, propertiesBox);
+    }
+    else if (choice == 'moves') {
+        renderMoves(i, propertiesBox);
+    }
+
+}
+
+/**
+ * this function changes the underline of the navigation links in the detail card
+ * 
+ * @param {} clickedElement this variable comes from the html part (this)
+ */
+function changeNavigation(clickedElement) {
+    const links = document.getElementsByClassName('navigation-link')
+    for (const link of links) {
+        link.classList.remove('navigation-active')
+    }
+    clickedElement.classList.add('navigation-active')
 }

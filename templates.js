@@ -48,12 +48,12 @@ function templateDetailCard(i, pokemonColor) {
                     <img class="pokemon-image" src="${allLoadedPokemon[i]['sprites']['other']['home']['front_default']}" alt="pokemonimage">
                 </div>
                 <div class="choose-properties">
-                    <h4 id="about" onclick="renderProperties('about')">about</h4>
-                    <h4 id="basestats" onclick="renderProperties('basestats')">basestats</h4>
-                    <h4 id="evolution" onclick="renderProperties('evolution')">evolution</h4>
-                    <h4 id="moves" onclick="renderProperties('moves')">moves</h4>
+                    <h4 class="navigation-link" id="about" onclick="renderProperties(${i}, 'about'); changeNavigation(this)">about</h4>
+                    <h4 class="navigation-link" id="basestats" onclick="renderProperties(${i}, 'basestats'); changeNavigation(this)">basestats</h4>
+                    <h4 class="navigation-link" id="evolution" onclick="renderProperties(${i}, 'evolution'); changeNavigation(this)">evolution</h4>
+                    <h4 class="navigation-link" id="moves" onclick="renderProperties(${i}, 'moves'); changeNavigation(this)">moves</h4>
                 </div>
-                <div id="about-box">
+                <div id="properties-box">
                     <!-- rendered with an own function -->
                 </div>
             </div>
@@ -63,21 +63,49 @@ function templateDetailCard(i, pokemonColor) {
 }
 
 
-function templateAboutBox() {
+function templateAboutBox(heigtInCm, weightInKg) {
+    return /*html*/ `
+        <table>
+            <tr>
+                <td>Height</td>
+                <td>${heigtInCm} cm</td>
+            </tr>
+            <tr>
+                <td>Weight</td>
+                <td>${weightInKg} kg</td>
+            </tr>
+            <tr id="abilities-table-row">
+                <td>Abilities</td>
+                <td id="abilities-box"></td>
+            </tr>
+        </table>
+    `;
+}
 
+
+function templateAbilities(j, pokemonAbility) {
+    return /*html*/ `
+        <span id="ability_${j}">${pokemonAbility},</span>
+    `;
 }
 
 
 function templateBaseStats() {
-
+    return /*html*/ `
+        <span>BaseStats zu implementieren (TODO)</span>
+    `;
 }
 
 
 function templateEvolution() {
-
+    return /*html*/ `
+        <span>Evolution zu implementieren (TODO)</span>
+    `;
 }
 
 
 function templateMoves() {
-
+    return /*html*/ `
+        <span>Moves zu implementieren (TODO)</span>
+    `;
 }

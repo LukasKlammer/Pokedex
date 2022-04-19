@@ -267,7 +267,7 @@ h1 {
     transform: scale(1.05);
 }
 
-.choose-property-selected {
+.navigation-active {
     font-weight: bold;
     border-bottom: 2px solid black !important;
 }
