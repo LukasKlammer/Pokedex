@@ -143,7 +143,7 @@ function stopEvent(ev) {
 
 function renderDetailCard(detailCardContainer, i) {
     let pokemonColor = colors[allLoadedPokemon[i]['types'][0]['type']['name']];
-    
+
     detailCardContainer.innerHTML = templateDetailCard(i, pokemonColor);
 
     renderTypes(i);
@@ -209,38 +209,36 @@ function renderMoves(i, propertiesBox) {
 }
 
 
-function favouriteOrUnfavourite(i) {
+function favouriteOrUnfavourite(i, ID) {
     let icon = document.getElementById('favourite-icon-detailcard');
 
-    let positionOfFavouritePokemon = arrayPositionFavouritePokemon(i);
+    let positionOfFavouritePokemon = arrayPositionFavouritePokemon(ID);
     console.log('Postion Favorit Pokemon' + positionOfFavouritePokemon);
 
-    if (arrayPositionFavouritePokemon == -1) {
+    if (positionOfFavouritePokemon == -1) {
         addToFavourites(i, icon);
     }
     else {
         alert('bereits vorhandne!');
     }
 
-    
     saveInLocalStorage();
 }
 
 
-function arrayPositionFavouritePokemon(i) {
-    let ID = i + 1; // the ID is 1 number higher, because array starts with 0 
+function arrayPositionFavouritePokemon(ID) {
+    
     let positionInArray = -1; // -1 is the symbol if we don't find a Pokemon in Favourites
 
     for (let j = 0; j < favouritePokemons.length; j++) {
         if (favouritePokemons[j]['id'] == ID) {
-            positionInArray = i;
+            positionInArray = j;
         }
         else {
 
         }
         
     }
-    console.log('Position des Elements im Array: ' + positionInArray);
     return positionInArray;
 }
 

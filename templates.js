@@ -27,7 +27,7 @@ function templateDetailCard(i, pokemonColor) {
             <div class="pokemon-detail-card-top" style="background-color: ${pokemonColor}">
                 <div class="arrow-and-heart">
                     <img src="img/arrow-back.png" onclick="closeOverlay()" alt="closeArrow">
-                    <img id='favourite-icon-detailcard' src="img/baseline_favorite_border_white_48dp.png" onclick="favouriteOrUnfavourite(${i})">
+                    <img id='favourite-icon-detailcard' src="img/baseline_favorite_border_white_48dp.png" onclick="favouriteOrUnfavourite(${i}, ${allLoadedPokemon[i]['id']})">
                 </div>
                 <div class="name-types-id-box">
                     <div class="name-types-box">
