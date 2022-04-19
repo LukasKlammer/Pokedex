@@ -33,8 +33,8 @@ async function init() {
     loadFromLocalStorage();
     loadAllPokemonNames();
     await loadPokemon();
-    sortPokemon();
-    renderPokemon();
+    sortPokemon(allLoadedPokemon);
+    renderPokemon(allLoadedPokemon);
 }
 
 /**loads all Pokemon-Names. Over 1000 Names. Pushs them in an array. Necessary for autocomplete-input-field */
@@ -51,13 +51,14 @@ async function loadAllPokemonNames() {
 
 function renderHomeScreen() {
     document.getElementById('pokemons-container').innerHTML = '';
-    renderPokemon();
+    renderPokemon(allLoadedPokemon);
 }
 
 
 function renderFavouritePokemons() {
     document.getElementById('pokemons-container').innerHTML = '';
-    document.getElementById('pokemons-container').innerHTML = 'Funktion wird noch implementiert'
+    renderPokemon(favouritePokemons);
+    allowLoadNextPokemons = false;
 }
 
 
@@ -74,24 +75,24 @@ async function loadPokemon() {
 }
 
 
-function sortPokemon() {
-    allLoadedPokemon = allLoadedPokemon.sort(function (a, b) {
+function sortPokemon(toSortPokemon) {
+    toSortPokemon = toSortPokemon.sort(function (a, b) {
         return a - b
     });
 }
 
 
 /**renders the pokemons, that we have already loaded */
-function renderPokemon() {
+function renderPokemon(toRenderPokemons) {
     let pokemonsContainer = document.getElementById('pokemons-container');
     pokemonsContainer.innerHTML = '';
 
-    for (let i = 0; i < allLoadedPokemon.length; i++) {
-        let pokemonID = allLoadedPokemon[i]['id'];
-        let pokemonName = allLoadedPokemon[i]['name'];
-        let pokemonImage = allLoadedPokemon[i]['sprites']['other']['home']['front_default'];
-        let pokemonTypes = allLoadedPokemon[i]['types'];
-        let pokemonMainType = allLoadedPokemon[i]['types'][0]['type']['name'];
+    for (let i = 0; i < toRenderPokemons.length; i++) {
+        let pokemonID = toRenderPokemons[i]['id'];
+        let pokemonName = toRenderPokemons[i]['name'];
+        let pokemonImage = toRenderPokemons[i]['sprites']['other']['home']['front_default'];
+        let pokemonTypes = toRenderPokemons[i]['types'];
+        let pokemonMainType = toRenderPokemons[i]['types'][0]['type']['name'];
         let pokemonColor = colors[pokemonMainType];
 
         pokemonsContainer.innerHTML += templatePokemon(i, pokemonID, pokemonName, pokemonImage, pokemonColor);
@@ -122,8 +123,8 @@ async function loadMorePokemon() {
     start += 20;
     stop += 20;
     await loadPokemon();
-    sortPokemon();
-    renderPokemon();
+    sortPokemon(allLoadedPokemon);
+    renderPokemon(allLoadedPokemon);
 }
 
 
@@ -143,11 +144,25 @@ function stopEvent(ev) {
 
 function renderDetailCard(detailCardContainer, i) {
     let pokemonColor = colors[allLoadedPokemon[i]['types'][0]['type']['name']];
+    let ID = allLoadedPokemon[i]['id'];
 
-    detailCardContainer.innerHTML = templateDetailCard(i, pokemonColor);
-
+    detailCardContainer.innerHTML = templateDetailCard(i, pokemonColor, ID);
+    renderFavouriteIcon(ID);
     renderTypes(i);
     renderProperties(i, 'about'); // at first load render the pokemon properties "about"
+}
+
+
+function renderFavouriteIcon(ID) {
+    let positionOfFavouritePokemon = arrayPositionFavouritePokemon(ID);
+    let icon = document.getElementById('favourite-icon-detailcard');
+
+    if (positionOfFavouritePokemon == -1) {  // if the Pokemon isn't part of the favourites
+        icon.src = 'img/baseline_favorite_border_white_48dp.png';
+    }
+    else {
+        icon.src = 'img/baseline_favorite_red_48dp.png';
+    }
 }
 
 
@@ -210,34 +225,27 @@ function renderMoves(i, propertiesBox) {
 
 
 function favouriteOrUnfavourite(i, ID) {
-    let icon = document.getElementById('favourite-icon-detailcard');
-
     let positionOfFavouritePokemon = arrayPositionFavouritePokemon(ID);
-    console.log('Postion Favorit Pokemon' + positionOfFavouritePokemon);
 
     if (positionOfFavouritePokemon == -1) {
-        addToFavourites(i, icon);
+        addToFavourites(i);
     }
     else {
-        alert('bereits vorhandne!');
+        removeFromFavourites(positionOfFavouritePokemon);
     }
-
+    sortPokemon(favouritePokemons); // TODO: check sort function
+    renderFavouriteIcon(ID);
     saveInLocalStorage();
 }
 
 
 function arrayPositionFavouritePokemon(ID) {
-    
     let positionInArray = -1; // -1 is the symbol if we don't find a Pokemon in Favourites
-
+    
     for (let j = 0; j < favouritePokemons.length; j++) {
         if (favouritePokemons[j]['id'] == ID) {
             positionInArray = j;
         }
-        else {
-
-        }
-        
     }
     return positionInArray;
 }
@@ -246,17 +254,11 @@ function arrayPositionFavouritePokemon(ID) {
 function addToFavourites(i, icon) {
     let toAddPokemon = allLoadedPokemon[i];
     favouritePokemons.push(toAddPokemon);
-    icon.src = 'img/baseline_favorite_red_48dp.png';
 }
 
 
-function getPokemonFavouriteState() {
-
-}
-
-
-function removeFromFavourites() {
-    icon.src = 'img/baseline_favorite_border_white_48dp.png';
+function removeFromFavourites(positionOfFavouritePokemon, icon) {
+    favouritePokemons.splice(positionOfFavouritePokemon, 1);
 }
 
 

@@ -21,13 +21,13 @@ function templateType(pokemonType) {
 }
 
 
-function templateDetailCard(i, pokemonColor) {
+function templateDetailCard(i, pokemonColor, ID) {
     return /*html*/ `
         <div id="pokemon-detail-card">
             <div class="pokemon-detail-card-top" style="background-color: ${pokemonColor}">
                 <div class="arrow-and-heart">
                     <img src="img/arrow-back.png" onclick="closeOverlay()" alt="closeArrow">
-                    <img id='favourite-icon-detailcard' src="img/baseline_favorite_border_white_48dp.png" onclick="favouriteOrUnfavourite(${i}, ${allLoadedPokemon[i]['id']})">
+                    <img id='favourite-icon-detailcard' src="" onclick="favouriteOrUnfavourite(${i}, ${ID})">
                 </div>
                 <div class="name-types-id-box">
                     <div class="name-types-box">
