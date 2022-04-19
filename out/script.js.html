@@ -1,4 +1,32 @@
-let currentPokemon; // global variable, is needet in many functions
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: script.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: script.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>let currentPokemon; // global variable, is needet in many functions
 let namesOfAllPokemon = []; // we load at the program-start all names --> needed for the autocomplete input field
 let allLoadedPokemon = []; // here we push all the loaded pokemons. that are not all, because we load lazy
 let favouritePokemons = [];  // we will push here the pokemons that we like much
@@ -41,7 +69,7 @@ async function loadAllPokemonNames() {
     let url = `https://pokeapi.co/api/v2/pokemon?limit=${numberOfAllPokemons}`;
     let response = await fetch(url);
     let pokemons = await response.json();
-    for (let i = 0; i < pokemons['results'].length; i++) {
+    for (let i = 0; i &lt; pokemons['results'].length; i++) {
         singlePokemonName = pokemons['results'][i]['name'];
         namesOfAllPokemon.push(singlePokemonName);
     }
@@ -61,8 +89,8 @@ function renderFavouritePokemons() {
 
 
 async function loadPokemon() {
-    for (let i = start; i < stop; i++) {
-        if (i <= numberOfAllPokemons) { // check, if we are at last available pokemon API element
+    for (let i = start; i &lt; stop; i++) {
+        if (i &lt; numberOfAllPokemons) {
             let url = `https://pokeapi.co/api/v2/pokemon/${i}`;
             let response = await fetch(url);
             currentPokemon = await response.json();
@@ -85,7 +113,7 @@ function renderPokemon() {
     let pokemonsContainer = document.getElementById('pokemons-container');
     pokemonsContainer.innerHTML = '';
 
-    for (let i = 0; i < allLoadedPokemon.length; i++) {
+    for (let i = 0; i &lt; allLoadedPokemon.length; i++) {
         let pokemonID = allLoadedPokemon[i]['id'];
         let pokemonName = allLoadedPokemon[i]['name'];
         let pokemonImage = allLoadedPokemon[i]['sprites']['other']['home']['front_default'];
@@ -101,7 +129,7 @@ function renderPokemon() {
 
 
 function renderPokemonTypes(pokemonID, pokemonTypes) {
-    for (let j = 0; j < pokemonTypes.length; j++) {
+    for (let j = 0; j &lt; pokemonTypes.length; j++) {
         const pokemonType = pokemonTypes[j]['type']['name'];
         document.getElementById(`pokemon-type-container-${pokemonID}`).innerHTML += templateType(pokemonType);
     }
@@ -110,7 +138,7 @@ function renderPokemonTypes(pokemonID, pokemonTypes) {
 
 /**when you are near the bottom of Site --> load more Pokemons */
 function lazyLoading() {
-    if ((window.innerHeight + window.scrollY + 300) >= document.body.offsetHeight && allowLoadNextPokemons) {
+    if ((window.innerHeight + window.scrollY + 300) >= document.body.offsetHeight &amp;&amp; allowLoadNextPokemons) {
         allowLoadNextPokemons = false;
         loadMorePokemon();
     }
@@ -153,7 +181,7 @@ function renderDetailCard(detailCardContainer, i) {
 function renderTypes(i) {
     let pokemonTypes = allLoadedPokemon[i]['types'];
 
-    for (let j = 0; j < pokemonTypes.length; j++) {
+    for (let j = 0; j &lt; pokemonTypes.length; j++) {
         const pokemonType = pokemonTypes[j]['type']['name'];
         document.getElementById('type-container').innerHTML += templateType(pokemonType);
     }
@@ -166,35 +194,35 @@ function renderAboutBox(i) {
     let heigtInCm = allLoadedPokemon[i]['height'] * 10; // API gives heigt in decimeters
 
     aboutBox.innerHTML = /*html*/ `
-        <table>
-            <tr>
-                <td>Height</td>
-                <td>${heigtInCm} cm</td>
-            </tr>
-            <tr>
-                <td>Weight</td>
-                <td>${weightInKg} kg</td>
-            </tr>
-            <tr id="abilities-table-row">
-                <td>Abilities</td>
-                <td id="abilities-box"></td>
-            </tr>
-        </table>
-        <h4>Breeding</h4>
-        <table>
-            <tr>
-                <td>Gender</td>
-                <td>männlich, weiblich %</td>
-            </tr>
-            <tr>
-                <td>Egg Groups</td>
-                <td>Monster</td>
-            </tr>
-            <tr>
-                <td>Egg Cycle</td>
-                <td>Grass</td>
-            </tr>
-        </table>
+        &lt;table>
+            &lt;tr>
+                &lt;td>Height&lt;/td>
+                &lt;td>${heigtInCm} cm&lt;/td>
+            &lt;/tr>
+            &lt;tr>
+                &lt;td>Weight&lt;/td>
+                &lt;td>${weightInKg} kg&lt;/td>
+            &lt;/tr>
+            &lt;tr id="abilities-table-row">
+                &lt;td>Abilities&lt;/td>
+                &lt;td id="abilities-box">&lt;/td>
+            &lt;/tr>
+        &lt;/table>
+        &lt;h4>Breeding&lt;/h4>
+        &lt;table>
+            &lt;tr>
+                &lt;td>Gender&lt;/td>
+                &lt;td>männlich, weiblich %&lt;/td>
+            &lt;/tr>
+            &lt;tr>
+                &lt;td>Egg Groups&lt;/td>
+                &lt;td>Monster&lt;/td>
+            &lt;/tr>
+            &lt;tr>
+                &lt;td>Egg Cycle&lt;/td>
+                &lt;td>Grass&lt;/td>
+            &lt;/tr>
+        &lt;/table>
     `;
 
     renderAbilities(i);
@@ -211,10 +239,10 @@ function renderAbilities(i) {
     let lastAbility; // variable for searching the last ability. Is needet for cut the semicolon at the end of the abilities-list
 
     if (pokemonAbilities.length > 0) {
-            for (let j = 0; j < pokemonAbilities.length; j++) {
+            for (let j = 0; j &lt; pokemonAbilities.length; j++) {
                 const pokemonAbility = pokemonAbilities[j]['ability']['name'];
                 abilitiesBox.innerHTML += /*html*/ `
-                <span id="ability_${j}">${pokemonAbility},</span>
+                &lt;span id="ability_${j}">${pokemonAbility},&lt;/span>
             `;
             lastAbility = `ability_${j}`;
         }
@@ -268,4 +296,26 @@ function renderProperties(choice) {
     //TODO render the box with properties
     //make active the choosen link with javascript
     document.getElementById(choice).classList.add('choose-property-selected');
-}
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#lazyLoading">lazyLoading</a></li><li><a href="global.html#loadAllPokemonNames">loadAllPokemonNames</a></li><li><a href="global.html#renderAbilities">renderAbilities</a></li><li><a href="global.html#renderPokemon">renderPokemon</a></li><li><a href="global.html#renderProperties">renderProperties</a></li><li><a href="global.html#stopEvent">stopEvent</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Tue Apr 19 2022 10:06:16 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
