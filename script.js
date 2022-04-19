@@ -2,6 +2,7 @@ let currentPokemon; // global variable, is needet in many functions
 let namesOfAllPokemon = []; // we load at the program-start all names --> needed for the autocomplete input field
 let allLoadedPokemon = []; // here we push all the loaded pokemons. that are not all, because we load lazy
 let favouritePokemons = [];  // we will push here the pokemons that we like much
+let numberOfAllPokemons = 1126; // this number are all available pokemons in the API
 let start = 1;
 let stop = 21;
 let allowLoadNextPokemons = false;
@@ -37,7 +38,7 @@ async function init() {
 
 /**loads all Pokemon-Names. Over 1000 Names. Pushs them in an array. Necessary for autocomplete-input-field */
 async function loadAllPokemonNames() {
-    let url = 'https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0';
+    let url = `https://pokeapi.co/api/v2/pokemon?limit=${numberOfAllPokemons}`;
     let response = await fetch(url);
     let pokemons = await response.json();
     for (let i = 0; i < pokemons['results'].length; i++) {
@@ -61,10 +62,12 @@ function renderFavouritePokemons() {
 
 async function loadPokemon() {
     for (let i = start; i < stop; i++) {
-        let url = `https://pokeapi.co/api/v2/pokemon/${i}`;
-        let response = await fetch(url);
-        currentPokemon = await response.json();
-        allLoadedPokemon.push(currentPokemon);
+        if (i < numberOfAllPokemons) {
+            let url = `https://pokeapi.co/api/v2/pokemon/${i}`;
+            let response = await fetch(url);
+            currentPokemon = await response.json();
+            allLoadedPokemon.push(currentPokemon);
+        }
     }
     console.log(allLoadedPokemon);
 }
@@ -74,7 +77,6 @@ function sortPokemon() {
     allLoadedPokemon = allLoadedPokemon.sort(function (a, b) {
         return a - b
     });
-
 }
 
 
@@ -141,44 +143,7 @@ function stopEvent(ev) {
 function renderDetailCard(detailCardContainer, i) {
     let pokemonColor = colors[allLoadedPokemon[i]['types'][0]['type']['name']];
 
-    detailCardContainer.innerHTML = /*html*/ `
-        <div id="pokemon-detail-card">
-            <div class="pokemon-detail-card-top" style="background-color: ${pokemonColor}">
-                <div class="arrow-and-heart">
-                    <img src="img/arrow-back.png" onclick="closeOverlay()" alt="closeArrow">
-                    <img id='favourite-icon-detailcard' src="img/baseline_favorite_border_white_48dp.png" onclick="favouriteOrUnfavourite(${i})">
-                </div>
-                <div class="name-types-id-box">
-                    <div class="name-types-box">
-                        <h1>
-                            ${allLoadedPokemon[i]['name']}
-                        </h1>
-                        <div id="type-container">
-                            <!-- here we render with for all the types -->
-                        </div>
-                    </div>
-                    <span class="pokemon-id">
-                        #${('0' + '0' + allLoadedPokemon[i]['id']).slice(-3)}
-                    </span>
-                </div>
-            </div>
-            <div class="pokemon-detail-card-bottom">
-                <div class="pokemon-image-box">
-                    <img class="pokemon-image" src="${allLoadedPokemon[i]['sprites']['other']['home']['front_default']}" alt="pokemonimage">
-                </div>
-                <div class="choose-properties">
-                    <h4 id="about" onclick="renderProperties('about')">about</h4>
-                    <h4 id="basestats" onclick="renderProperties('basestats')">basestats</h4>
-                    <h4 id="evolution" onclick="renderProperties('evolution')">evolution</h4>
-                    <h4 id="moves" onclick="renderProperties('moves')">moves</h4>
-                </div>
-                <div id="about-box">
-                    <!-- rendered with an own function -->
-                </div>
-            </div>
-        </div>
-    </div>
-    `;
+    detailCardContainer.innerHTML = templateDetailCard(i, pokemonColor);
 
     renderTypes(i);
     renderAboutBox(i);
@@ -190,9 +155,7 @@ function renderTypes(i) {
 
     for (let j = 0; j < pokemonTypes.length; j++) {
         const pokemonType = pokemonTypes[j]['type']['name'];
-        document.getElementById('type-container').innerHTML += /*html*/ `
-        <p class="type">${pokemonType}</p>
-        `;
+        document.getElementById('type-container').innerHTML += templateType(pokemonType);
     }
 }
 
@@ -205,10 +168,6 @@ function renderAboutBox(i) {
     aboutBox.innerHTML = /*html*/ `
         <table>
             <tr>
-                <td>Species</td>
-                <td>will be later included</td>
-            </tr>
-            <tr>
                 <td>Height</td>
                 <td>${heigtInCm} cm</td>
             </tr>
@@ -216,9 +175,9 @@ function renderAboutBox(i) {
                 <td>Weight</td>
                 <td>${weightInKg} kg</td>
             </tr>
-            <tr>
+            <tr id="abilities-table-row">
                 <td>Abilities</td>
-                <td id="abilities-box">...</td>
+                <td id="abilities-box"></td>
             </tr>
         </table>
         <h4>Breeding</h4>
@@ -241,28 +200,29 @@ function renderAboutBox(i) {
     renderAbilities(i);
 }
 
-
+/**
+ * Dies ist ein Test für JsDOC
+ * 
+ * @param {*integer} i This is the variable of current showed pokemon. 
+ */
 function renderAbilities(i) {
     let abilitiesBox = document.getElementById('abilities-box');
+    let pokemonAbilities = allLoadedPokemon[i]['abilities'];
+    let lastAbility; // variable for searching the last ability. Is needet for cut the semicolon at the end of the abilities-list
 
+    if (pokemonAbilities.length > 0) {
+            for (let j = 0; j < pokemonAbilities.length; j++) {
+                const pokemonAbility = pokemonAbilities[j]['ability']['name'];
+                abilitiesBox.innerHTML += /*html*/ `
+                <span id="ability_${j}">${pokemonAbility},</span>
+            `;
+            lastAbility = `ability_${j}`;
+        }
+        console.log(lastAbility); //TODO: implement .slice method to cancel the last ,
 
-    abilitiesBox.innerHTML = /*html*/ `
-        <span>wird noch implementiert, es braucht for Schleife</span>
-    
-    
-    `;
-
-    //TODO renderAbilities
-
-// let pokemonTypes = allLoadedPokemon[i]['types'];
-
-// for (let j = 0; j < pokemonTypes.length; j++) {
-//     const pokemonType = pokemonTypes[j]['type']['name'];
-//     document.getElementById('type-container').innerHTML += /*html*/ `
-//     <p class="type">${pokemonType}</p>
-//     `;
-// }
-
+    } else {
+        document.getElementById('abilities-table-row').classList.add('d-none'); // if a pokemon hasn't any ability we don't need the table row with this data
+    }
 }
 
 
