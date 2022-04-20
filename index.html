@@ -8,6 +8,7 @@
     <title>Pokedex</title>
     <link rel="icon" type="image/x-icon" href="img/pokeball.png">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="autocomplete.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -16,7 +17,8 @@
     <script src="script.js"></script>
     <script src="templates.js"></script>
     <script src="search.js"></script>
-    
+
+
 </head>
 
 <body onload="init()" onscroll="lazyLoading()">
@@ -25,10 +27,26 @@
         <div class="header-box">
             <h1 class="headline">Pokedex</h1>
             <div class="search-box">
-                <img id="magnifying-glass" src="img/magnifying-glass-3-24.png" alt="">
-                <input onclick="hideMagnifyingGlass()" onkeyup="renderSearchedPokemon()" onfocusout="showMagnifyingGlass()"
-                    type="text" id="search-input" placeholder="Suchen">
-                <img id="delete-search-input" onclick="deleteSearchInput()" src="img/close-window-24.png" alt="">
+
+                <form autocomplete="off" action="/action_page.php">
+                    <div class="autocomplete" style="width: 300px;">
+                        <img id="magnifying-glass" src="img/magnifying-glass-3-24.png" alt="">
+                        <input onclick="hideMagnifyingGlass()" onkeyup="renderSearchedPokemon()"
+                            onfocusout="showMagnifyingGlass()" type="text" id="myInput" placeholder="Suchen">
+                        <img id="delete-search-input" onclick="deleteSearchInput()" src="img/close-window-24.png"
+                            alt="">
+                    </div>
+                    <!-- <input type="submit"> -->
+                </form>
+
+
+                <!-- <img id="magnifying-glass" src="img/magnifying-glass-3-24.png" alt="">
+                <input onclick="hideMagnifyingGlass()" onkeyup="renderSearchedPokemon()"
+                    onfocusout="showMagnifyingGlass()" type="text" id="search-input" placeholder="Suchen">
+                <img id="delete-search-input" onclick="deleteSearchInput()" src="img/close-window-24.png" alt=""> -->
+
+
+
             </div>
             <div class="header-icon-box">
                 <img onclick="renderHomeScreen()" src="img/pokeball.png" alt="">
