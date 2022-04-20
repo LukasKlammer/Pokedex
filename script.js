@@ -1,8 +1,8 @@
 let currentPokemon; // global variable, is needet in many functions
-let namesOfAllPokemon = []; // we load at the program-start all names --> needed for the autocomplete input field
 let allLoadedPokemon = []; // here we push all the loaded pokemons. that are not all, because we load lazy
 let favouritePokemons = [];  // we will push here the pokemons that we like much
 let numberOfAllPokemons = 1126; // this number are all available pokemons in the API
+let namesOfAllPokemon = []; // we load at the program-start all names --> needed for the autocomplete input field
 let start = 1;
 let stop = 21;
 let allowLoadNextPokemons = false;
@@ -37,6 +37,7 @@ async function init() {
     renderPokemon(allLoadedPokemon);
 }
 
+
 /**loads all Pokemon-Names. Over 1000 Names. Pushs them in an array. Necessary for autocomplete-input-field */
 async function loadAllPokemonNames() {
     let url = `https://pokeapi.co/api/v2/pokemon?limit=${numberOfAllPokemons}`;
@@ -59,6 +60,12 @@ function renderFavouritePokemons() {
     document.getElementById('pokemons-container').innerHTML = '';
     renderPokemon(favouritePokemons);
     allowLoadNextPokemons = false;
+}
+
+
+function renderSearchedPokemon() {
+    let foundPokemon = getSearchedPokemons();
+    // renderPokemon(foundPokemon);
 }
 
 
@@ -241,7 +248,7 @@ function favouriteOrUnfavourite(i, ID) {
 
 function arrayPositionFavouritePokemon(ID) {
     let positionInArray = -1; // -1 is the symbol if we don't find a Pokemon in Favourites
-    
+
     for (let j = 0; j < favouritePokemons.length; j++) {
         if (favouritePokemons[j]['id'] == ID) {
             positionInArray = j;
@@ -262,13 +269,11 @@ function removeFromFavourites(positionOfFavouritePokemon, icon) {
 }
 
 
-function searchInFavourites() {
+async function getSearchedPokemons() {
+    let searchInput = document.getElementById('search-input').value;
+    let foundPokemonNames = namesOfAllPokemon.filter(pokemon => pokemon.includes(searchInput));
+    console.log(foundPokemonNames);
 
-}
-
-
-function searchPokemon() {
-    let searchItem = document.getElementById('search-input').value;
 }
 
 

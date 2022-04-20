@@ -15,6 +15,8 @@
         rel="stylesheet">
     <script src="script.js"></script>
     <script src="templates.js"></script>
+    <script src="search.js"></script>
+    
 </head>
 
 <body onload="init()" onscroll="lazyLoading()">
@@ -24,7 +26,7 @@
             <h1 class="headline">Pokedex</h1>
             <div class="search-box">
                 <img id="magnifying-glass" src="img/magnifying-glass-3-24.png" alt="">
-                <input onclick="hideMagnifyingGlass()" onkeyup="searchPokemon()" onfocusout="showMagnifyingGlass()"
+                <input onclick="hideMagnifyingGlass()" onkeyup="renderSearchedPokemon()" onfocusout="showMagnifyingGlass()"
                     type="text" id="search-input" placeholder="Suchen">
                 <img id="delete-search-input" onclick="deleteSearchInput()" src="img/close-window-24.png" alt="">
             </div>
