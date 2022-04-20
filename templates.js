@@ -1,6 +1,6 @@
 function templatePokemon(i, pokemonID, pokemonName, pokemonImage, pokemonColor) {
     return /*html*/ `
-    <div onclick="openPokemon(${i})" class="pokemon-box" style="background-color: ${pokemonColor}">
+    <div onclick="openPokemon(${pokemonID}, '${pokemonName}')" class="pokemon-box" style="background-color: ${pokemonColor}">
         <div class="name-id-box">
             <h1 id="pokemon-name">${pokemonName}</h1>
             <span class="pokemon-id" id="pokemon-id">#${('0' + '0' + pokemonID).slice(-3)}</span>
