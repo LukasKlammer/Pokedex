@@ -31,8 +31,8 @@ let colors = {
 
 async function init() {
     loadFromLocalStorage();
-    await loadAllPokemonNames();
-    await loadPokemon();
+    await loadAllPokemonNames(); // loads all names, required for autocomplete field
+    await loadPokemon(); // loads a part of the pokemon API
     sortPokemon(allLoadedPokemon);
     renderPokemon(allLoadedPokemon);
     autocomplete(document.getElementById("myInput"), namesOfAllPokemon);
@@ -51,6 +51,7 @@ async function loadAllPokemonNames() {
 }
 
 
+/**renders the home screen with all pokemons that we have already loadet */
 function renderHomeScreen() {
     document.getElementById('pokemons-container').innerHTML = '';
     renderPokemon(allLoadedPokemon);
@@ -60,7 +61,7 @@ function renderHomeScreen() {
 function renderFavouritePokemons() {
     document.getElementById('pokemons-container').innerHTML = '';
     renderPokemon(favouritePokemons);
-    allowLoadNextPokemons = false;
+    allowLoadNextPokemons = false; // disables loading next pokemons, needet because we are at the bottom of the site
 }
 
 
@@ -69,10 +70,11 @@ function renderSearchedPokemon() {
     // renderPokemon(foundPokemon);
 }
 
-
+/**loads pokemons from the api */
 async function loadPokemon() {
     for (let i = start; i < stop; i++) {
-        if (i <= numberOfAllPokemons) { // check, if we are at last available pokemon API element
+        console.log(allLoadedPokemon[i]);
+        if (i <= numberOfAllPokemons && allLoadedPokemon[i - 1] == undefined) { // check, if we are at last available pokemon API element and if a pokemon isn't already loadet
             let url = `https://pokeapi.co/api/v2/pokemon/${i}`;
             let response = await fetch(url);
             foundPokemon = await response.json();
@@ -82,7 +84,11 @@ async function loadPokemon() {
     console.log(allLoadedPokemon);
 }
 
-
+/**
+ * sorts the loadet pokemon
+ * 
+ * @param {Object[]} toSortPokemon we give in an array with all pokemon that we would sort
+ */
 function sortPokemon(toSortPokemon) {
     toSortPokemon = toSortPokemon.sort(function (a, b) {
         return a - b
@@ -90,26 +96,38 @@ function sortPokemon(toSortPokemon) {
 }
 
 
-/**renders the pokemons, that we have already loaded */
+/**
+ * renders the pokemon-cards, for example in home screen or favourites
+ * 
+ * @param {Object[]} toRenderPokemons the array with the pokemons, that we would render
+ */
 function renderPokemon(toRenderPokemons) {
     let pokemonsContainer = document.getElementById('pokemons-container');
     pokemonsContainer.innerHTML = '';
 
     for (let i = 0; i < toRenderPokemons.length; i++) {
-        let pokemonID = toRenderPokemons[i]['id'];
-        let pokemonName = toRenderPokemons[i]['name'];
-        let pokemonImage = toRenderPokemons[i]['sprites']['other']['home']['front_default'];
-        let pokemonTypes = toRenderPokemons[i]['types'];
-        let pokemonMainType = toRenderPokemons[i]['types'][0]['type']['name'];
-        let pokemonColor = colors[pokemonMainType];
+        if (toRenderPokemons[i]) { // wenn die Stelle im Array gedeckt ist
+            let pokemonID = toRenderPokemons[i]['id'];
+            let pokemonName = toRenderPokemons[i]['name'];
+            let pokemonImage = toRenderPokemons[i]['sprites']['other']['home']['front_default'];
+            let pokemonTypes = toRenderPokemons[i]['types'];
+            let pokemonMainType = toRenderPokemons[i]['types'][0]['type']['name'];
+            let pokemonColor = colors[pokemonMainType];
 
-        pokemonsContainer.innerHTML += templatePokemon(i, pokemonID, pokemonName, pokemonImage, pokemonColor);
-        renderPokemonTypes(pokemonID, pokemonTypes);
+            pokemonsContainer.innerHTML += templatePokemon(i, pokemonID, pokemonName, pokemonImage, pokemonColor);
+            renderPokemonTypes(pokemonID, pokemonTypes);
+        }
     }
     allowLoadNextPokemons = true; // after the rendering of all pokemon it is possible to load next pokemon
 }
 
 
+/**
+ * renders the boxes with the types
+ * 
+ * @param {number} pokemonID 
+ * @param {Object[]} pokemonTypes 
+ */
 function renderPokemonTypes(pokemonID, pokemonTypes) {
     for (let j = 0; j < pokemonTypes.length; j++) {
         const pokemonType = pokemonTypes[j]['type']['name'];
@@ -126,7 +144,7 @@ function lazyLoading() {
     }
 }
 
-
+/**loads the next 20 pokemons */
 async function loadMorePokemon() {
     start += 20;
     stop += 20;
@@ -136,6 +154,7 @@ async function loadMorePokemon() {
 }
 
 
+/**function opens a specific pokemon (overlay) */
 function openPokemon(ID, name) {
     openOverlay();
     let detailCardContainer = document.getElementById('pokemon-detail-card'); // brings the whole card to a variable
@@ -150,6 +169,12 @@ function stopEvent(ev) {
 }
 
 
+/**
+ * 
+ * @param {*} detailCardContainer a HTML Element, that we can fill with content
+ * @param {*} ID the ID of the pokemon that we would render
+ * @param {*} name 
+ */
 async function renderDetailCard(detailCardContainer, ID, name) {
     let i = ID - 1;
     if (allLoadedPokemon[i] == undefined) { // load this pokemon, if it isn't already loadet
@@ -244,7 +269,7 @@ function favouriteOrUnfavourite(i, ID) {
     else {
         removeFromFavourites(positionOfFavouritePokemon);
     }
-    sortPokemon(favouritePokemons); // TODO: check sort function
+    sortPokemon(favouritePokemons);
     renderFavouriteIcon(ID);
     saveInLocalStorage();
 }
