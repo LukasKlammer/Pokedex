@@ -56,7 +56,7 @@ function renderHomeScreen() {
     renderPokemon(allLoadedPokemon);
 }
 
-
+/**renders all pokemons that are in folder favourite pokemons */
 function renderFavouritePokemons() {
     document.getElementById('pokemons-container').innerHTML = '';
     renderPokemon(favouritePokemons);
@@ -179,6 +179,12 @@ function stopEvent(ev) {
 }
 
 
+/**
+ * renders the detail-card from a pokemon
+ * 
+ * @param {div} detailCardContainer the container, that we fill with innerHTML syntax
+ * @param {number} ID from the to render pokemon
+ */
 async function renderDetailCard(detailCardContainer, ID) {
     await loadPokemonIfMissing(ID);
     let pokemon = allLoadedPokemon.find(pokemon => pokemon['id'] === ID);
@@ -187,7 +193,7 @@ async function renderDetailCard(detailCardContainer, ID) {
     detailCardContainer.innerHTML = templateDetailCard(pokemon, pokemonColor, ID);
     renderFavouriteIcon(ID);
     renderTypes(pokemon);
-    renderProperties(pokemon, 'about'); // at first load render the pokemon properties "about"
+    renderProperties(ID, 'about'); // at first load render the pokemon properties "about"
 }
 
 
@@ -225,8 +231,8 @@ function renderTypes(pokemon) {
 
 
 /**renders the properties in the pokemon detail card */
-function renderProperties(pokemon, choice) {
-
+function renderProperties(ID, choice) {
+    let pokemon = allLoadedPokemon.find(pokemon => pokemon['id'] === ID);
     let propertiesBox = document.getElementById('properties-box');
     propertiesBox.innerHTML = '';
 
@@ -281,20 +287,20 @@ function renderAbilities(pokemon) {
 
 
 function renderBaseStats(pokemon, propertiesBox) {
-    propertiesBox.innerHTML = templateBaseStats();
+    let pokemonStats = pokemon['stats'];
+    for (let i = 0; i < pokemonStats.length; i++) {
+        const pokemonStatName = pokemonStats[i]['stat']['name'];
+        const pokemonStat = pokemonStats[i]['base_stat'];
+        propertiesBox.innerHTML += templateBaseStats(pokemonStatName, pokemonStat);
+    }
 }
 
 
-function renderEvolution(pokemon, propertiesBox) {
-    propertiesBox.innerHTML = templateEvolution();
-}
-
-
-function renderMoves(pokemon, propertiesBox) {
-    propertiesBox.innerHTML = templateMoves();
-}
-
-
+/**
+ * function decides, if by click on the heart icon a pokemon should be favourite or unfavourite
+ * 
+ * @param {number} ID  from the pokemon that we would make favourite or unfavourite
+ */
 function favouriteOrUnfavourite(ID) {
     let positionOfFavouritePokemon = arrayPositionFavouritePokemon(ID);
     let pokemon = allLoadedPokemon.find(pokemon => pokemon['id'] === ID)
@@ -310,6 +316,12 @@ function favouriteOrUnfavourite(ID) {
 }
 
 
+/**
+ * searches a pokemon in the array favouritePokemons
+ * 
+ * @param {number} ID from the pokemon that we would find
+ * @returns {number} returns the position of the pokemon in the favouritePokemons-array
+ */
 function arrayPositionFavouritePokemon(ID) {
     let positionInArray = favouritePokemons.findIndex(favPokemon => favPokemon['id'] === ID);
     return positionInArray;
@@ -326,14 +338,19 @@ function removeFromFavourites(positionOfFavouritePokemon) {
 }
 
 
+/**searches the pokemons that user will load */
 async function getSearchedPokemon() {
     let searchInput = document.getElementById('myInput').value;
     let foundPokemonNames = namesOfAllPokemon.filter(pokemon => pokemon.includes(searchInput));
-    console.log(foundPokemonNames);
     loadSearchedPokemons(foundPokemonNames);
 }
 
 
+/**
+ * loads the pokemons that are found by searching by name
+ * 
+ * @param {array} pokemonNames all names of pokemons that should be rendered
+ */
 async function loadSearchedPokemons(pokemonNames) {
     let foundPokemons = [];
 
@@ -342,7 +359,6 @@ async function loadSearchedPokemons(pokemonNames) {
         let foundPokemon = await loadPokemonByNameOrID(pokemonName);
         foundPokemons.push(foundPokemon);
     }
-    console.log(foundPokemons);
     renderPokemon(foundPokemons);
 }
 
@@ -366,9 +382,9 @@ function openOverlay() {
 /**
  * this function changes the underline of the navigation links in the detail card
  * 
- * @param {} clickedElement this variable comes from the html part (this)
+ * @param {string} clickedElement name of clicked link
  */
-function changeNavigation(clickedElement) {
+ function changeNavigation(clickedElement) {
     const links = document.getElementsByClassName('navigation-link')
     for (const link of links) {
         link.classList.remove('navigation-active')

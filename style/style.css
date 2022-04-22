@@ -50,6 +50,7 @@ h1 {
     margin: 24px;
     font-family: 'pokemon-pocket-monk';
     font-size: 40px;
+    cursor: pointer;
 }
 
 .search-box {
@@ -161,6 +162,7 @@ h1 {
 
 .type {
     min-width: 70px;
+    max-width: 120px;
     text-align: center;
     background-color: #4c2d72;
     padding: 8px;
@@ -254,7 +256,7 @@ h1 {
 
 .choose-properties {
     display: flex;
-    justify-content: space-between;
+    gap: 40px;
     transition: transform 125ms ease-in-out;
 }
 

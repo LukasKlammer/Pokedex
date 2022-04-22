@@ -50,8 +50,6 @@ function templateDetailCard(pokemon, pokemonColor, ID) {
                 <div class="choose-properties">
                     <h4 class="navigation-link" id="about" onclick="renderProperties(${ID}, 'about'); changeNavigation(this)">about</h4>
                     <h4 class="navigation-link" id="basestats" onclick="renderProperties(${ID}, 'basestats'); changeNavigation(this)">basestats</h4>
-                    <h4 class="navigation-link" id="evolution" onclick="renderProperties(${ID}, 'evolution'); changeNavigation(this)">evolution</h4>
-                    <h4 class="navigation-link" id="moves" onclick="renderProperties(${ID}, 'moves'); changeNavigation(this)">moves</h4>
                 </div>
                 <div id="properties-box">
                     <!-- rendered with an own function -->
@@ -90,22 +88,8 @@ function templateAbilities(j, pokemonAbility) {
 }
 
 
-function templateBaseStats() {
+function templateBaseStats(pokemonStatName, pokemonStat) {
     return /*html*/ `
-        <span>BaseStats zu implementieren (TODO)</span>
-    `;
-}
-
-
-function templateEvolution() {
-    return /*html*/ `
-        <span>Evolution zu implementieren (TODO)</span>
-    `;
-}
-
-
-function templateMoves() {
-    return /*html*/ `
-        <span>Moves zu implementieren (TODO)</span>
+        <span>${pokemonStatName}: </span><span> ${pokemonStat}</span><br>
     `;
 }
