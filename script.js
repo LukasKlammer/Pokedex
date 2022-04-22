@@ -32,8 +32,8 @@ let colors = {
 async function init() {
     loadFromLocalStorage();
     await loadAllPokemonNames(); // loads all names, required for autocomplete field
-    await loadPokemon(); // loads a part of the pokemon API
-    sortPokemon(allLoadedPokemon);
+    await loadPokemons(); // loads a part of the pokemon API
+    // sortPokemon(allLoadedPokemon);
     renderPokemon(allLoadedPokemon);
     autocomplete(document.getElementById("myInput"), namesOfAllPokemon);
 }
@@ -71,29 +71,42 @@ function renderSearchedPokemon() {
 }
 
 /**loads pokemons from the api */
-async function loadPokemon() {
-    for (let i = start; i < stop; i++) {
-        console.log(allLoadedPokemon[i]);
-        if (i <= numberOfAllPokemons && allLoadedPokemon[i - 1] == undefined) { // check, if we are at last available pokemon API element and if a pokemon isn't already loadet
-            let url = `https://pokeapi.co/api/v2/pokemon/${i}`;
-            let response = await fetch(url);
-            foundPokemon = await response.json();
+async function loadPokemons() {
+    for (let ID = start; ID < stop; ID++) {
+        let alreadyLoadetPokemon = allLoadedPokemon.find(pokemon => pokemon['id'] === ID);
+        if (ID <= numberOfAllPokemons && alreadyLoadetPokemon == undefined) { // check, if we are at last available pokemon API element and if a pokemon isn't already loadet
+            let foundPokemon = await loadPokemonByNameOrID(ID);
             allLoadedPokemon.push(foundPokemon);
         }
     }
     console.log(allLoadedPokemon);
 }
 
+
 /**
- * sorts the loadet pokemon
+ * function fetches a single pokemon from the API. You can choose the to load pokemon by his name or ID
  * 
- * @param {Object[]} toSortPokemon we give in an array with all pokemon that we would sort
+ * @param {string or number} nameOrID 
+ * @returns object
  */
-function sortPokemon(toSortPokemon) {
-    toSortPokemon = toSortPokemon.sort(function (a, b) {
-        return a - b
-    });
+async function loadPokemonByNameOrID(nameOrID) {
+    let url = `https://pokeapi.co/api/v2/pokemon/${nameOrID}`;
+    let response = await fetch(url);
+    foundPokemon = await response.json();
+    return foundPokemon;
 }
+
+
+// /**
+//  * sorts the loadet pokemon
+//  * 
+//  * @param {Object[]} toSortPokemon we give in an array with all pokemon that we would sort
+//  */
+// function sortPokemon(toSortPokemon) {
+//     toSortPokemon = toSortPokemon.sort(function (a, b) {
+//         return a - b
+//     });
+// }
 
 
 /**
@@ -106,6 +119,9 @@ function renderPokemon(toRenderPokemons) {
     pokemonsContainer.innerHTML = '';
 
     for (let i = 0; i < toRenderPokemons.length; i++) {
+
+        let toRenderPokemon = toRenderPokemons.find(pokemon => pokemon['id'] === i); // TODO alles umschreibn, weil wir pok nun hier haben
+
         if (toRenderPokemons[i]) { // wenn die Stelle im Array gedeckt ist
             let pokemonID = toRenderPokemons[i]['id'];
             let pokemonName = toRenderPokemons[i]['name'];
@@ -148,7 +164,7 @@ function lazyLoading() {
 async function loadMorePokemon() {
     start += 20;
     stop += 20;
-    await loadPokemon();
+    await loadPokemons();
     sortPokemon(allLoadedPokemon);
     renderPokemon(allLoadedPokemon);
 }
@@ -176,12 +192,14 @@ function stopEvent(ev) {
  * @param {*} name 
  */
 async function renderDetailCard(detailCardContainer, ID, name) {
-    let i = ID - 1;
-    if (allLoadedPokemon[i] == undefined) { // load this pokemon, if it isn't already loadet
-        let foundPokemon = await loadPokemonByName(name);
-        allLoadedPokemon[i] = foundPokemon;
+    let alreadyLoadetPokemon = allLoadedPokemon.find(pokemon => pokemon['id'] === ID); 
+    console.log(alreadyLoadetPokemon);
+    if (alreadyLoadetPokemon == undefined) { // load this pokemon, if it isn't already loadet
+        let foundPokemon = await loadPokemonByNameOrID(name);
+        allLoadedPokemon.push(foundPokemon);
+        alreadyLoadetPokemon = foundPokemon;
     }
-    let pokemonColor = colors[allLoadedPokemon[i]['types'][0]['type']['name']];
+    let pokemonColor = colors[allLoadedPokemon[i]['types'][0]['type']['name']]; //TODO --> alles umschreiben, da wir Pokemon nun an der Hand haben
     detailCardContainer.innerHTML = templateDetailCard(i, pokemonColor, ID);
     renderFavouriteIcon(ID);
     renderTypes(i);
@@ -311,19 +329,11 @@ async function loadSearchedPokemons(pokemonNames) {
 
     for (let i = 0; i < pokemonNames.length; i++) {
         let pokemonName = pokemonNames[i];
-        let foundPokemon = await loadPokemonByName(pokemonName);
+        let foundPokemon = await loadPokemonByNameOrID(pokemonName);
         foundPokemons.push(foundPokemon);
     }
     console.log(foundPokemons);
     renderPokemon(foundPokemons);
-}
-
-
-async function loadPokemonByName(name) {
-    let url = `https://pokeapi.co/api/v2/pokemon/${name}`;
-    let response = await fetch(url);
-    foundPokemon = await response.json();
-    return foundPokemon;
 }
 
 
