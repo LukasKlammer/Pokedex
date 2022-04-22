@@ -33,7 +33,6 @@ async function init() {
     loadFromLocalStorage();
     await loadAllPokemonNames(); // loads all names, required for autocomplete field
     await loadPokemons(); // loads a part of the pokemon API
-    // sortPokemon(allLoadedPokemon);
     renderPokemon(allLoadedPokemon);
     autocomplete(document.getElementById("myInput"), namesOfAllPokemon);
 }
@@ -97,16 +96,17 @@ async function loadPokemonByNameOrID(nameOrID) {
 }
 
 
-// /**
-//  * sorts the loadet pokemon
-//  * 
-//  * @param {Object[]} toSortPokemon we give in an array with all pokemon that we would sort
-//  */
-// function sortPokemon(toSortPokemon) {
-//     toSortPokemon = toSortPokemon.sort(function (a, b) {
-//         return a - b
-//     });
-// }
+/**
+ * sorts the array with the pokemons
+ * 
+ * @param {object} pokemons overgiven array with pokemons
+ */
+function sortPokemons(pokemons) {
+    pokemons = pokemons.sort(function (a, b) {
+        return parseFloat(a.id) - parseFloat(b.id);
+    }); // Sortiertes Array
+
+}
 
 
 /**
@@ -117,22 +117,17 @@ async function loadPokemonByNameOrID(nameOrID) {
 function renderPokemon(toRenderPokemons) {
     let pokemonsContainer = document.getElementById('pokemons-container');
     pokemonsContainer.innerHTML = '';
+    sortPokemons(toRenderPokemons);
 
     for (let i = 0; i < toRenderPokemons.length; i++) {
-
-        let toRenderPokemon = toRenderPokemons.find(pokemon => pokemon['id'] === i); // TODO alles umschreibn, weil wir pok nun hier haben
-
-        if (toRenderPokemons[i]) { // wenn die Stelle im Array gedeckt ist
-            let pokemonID = toRenderPokemons[i]['id'];
-            let pokemonName = toRenderPokemons[i]['name'];
-            let pokemonImage = toRenderPokemons[i]['sprites']['other']['home']['front_default'];
-            let pokemonTypes = toRenderPokemons[i]['types'];
-            let pokemonMainType = toRenderPokemons[i]['types'][0]['type']['name'];
-            let pokemonColor = colors[pokemonMainType];
-
-            pokemonsContainer.innerHTML += templatePokemon(i, pokemonID, pokemonName, pokemonImage, pokemonColor);
-            renderPokemonTypes(pokemonID, pokemonTypes);
-        }
+        let pokemonID = toRenderPokemons[i]['id'];
+        let pokemonName = toRenderPokemons[i]['name'];
+        let pokemonImage = toRenderPokemons[i]['sprites']['other']['home']['front_default'];
+        let pokemonTypes = toRenderPokemons[i]['types'];
+        let pokemonMainType = toRenderPokemons[i]['types'][0]['type']['name'];
+        let pokemonColor = colors[pokemonMainType];
+        pokemonsContainer.innerHTML += templatePokemon(i, pokemonID, pokemonName, pokemonImage, pokemonColor);
+        renderPokemonTypes(pokemonID, pokemonTypes);
     }
     allowLoadNextPokemons = true; // after the rendering of all pokemon it is possible to load next pokemon
 }
@@ -165,7 +160,6 @@ async function loadMorePokemon() {
     start += 20;
     stop += 20;
     await loadPokemons();
-    sortPokemon(allLoadedPokemon);
     renderPokemon(allLoadedPokemon);
 }
 
@@ -185,30 +179,30 @@ function stopEvent(ev) {
 }
 
 
-/**
- * 
- * @param {*} detailCardContainer a HTML Element, that we can fill with content
- * @param {*} ID the ID of the pokemon that we would render
- * @param {*} name 
- */
-async function renderDetailCard(detailCardContainer, ID, name) {
-    let alreadyLoadetPokemon = allLoadedPokemon.find(pokemon => pokemon['id'] === ID); 
-    console.log(alreadyLoadetPokemon);
-    if (alreadyLoadetPokemon == undefined) { // load this pokemon, if it isn't already loadet
-        let foundPokemon = await loadPokemonByNameOrID(name);
-        allLoadedPokemon.push(foundPokemon);
-        alreadyLoadetPokemon = foundPokemon;
-    }
-    let pokemonColor = colors[allLoadedPokemon[i]['types'][0]['type']['name']]; //TODO --> alles umschreiben, da wir Pokemon nun an der Hand haben
-    detailCardContainer.innerHTML = templateDetailCard(i, pokemonColor, ID);
+async function renderDetailCard(detailCardContainer, ID) {
+    await loadPokemonIfMissing(ID);
+    let pokemon = allLoadedPokemon.find(pokemon => pokemon['id'] === ID);
+    let type = pokemon['types'][0]['type']['name'];
+    let pokemonColor = colors[type];
+    detailCardContainer.innerHTML = templateDetailCard(pokemon, pokemonColor, ID);
     renderFavouriteIcon(ID);
-    renderTypes(i);
-    renderProperties(i, 'about'); // at first load render the pokemon properties "about"
+    renderTypes(pokemon);
+    renderProperties(pokemon, 'about'); // at first load render the pokemon properties "about"
+}
+
+
+async function loadPokemonIfMissing(ID) {
+    let pokemon = allLoadedPokemon.find(pokemon => pokemon['id'] === ID);
+    if (pokemon == undefined) { // load this pokemon, if it isn't already loadet
+        let pokemon = await loadPokemonByNameOrID(ID);
+        allLoadedPokemon.push(pokemon);
+    }
 }
 
 
 function renderFavouriteIcon(ID) {
     let positionOfFavouritePokemon = arrayPositionFavouritePokemon(ID);
+
     let icon = document.getElementById('favourite-icon-detailcard');
 
     if (positionOfFavouritePokemon == -1) {  // if the Pokemon isn't part of the favourites
@@ -220,34 +214,57 @@ function renderFavouriteIcon(ID) {
 }
 
 
-function renderTypes(i) {
-    let pokemonTypes = allLoadedPokemon[i]['types'];
+function renderTypes(pokemon) {
+    let pokemonTypes = pokemon['types'];
 
-    for (let j = 0; j < pokemonTypes.length; j++) {
-        const pokemonType = pokemonTypes[j]['type']['name'];
+    for (let i = 0; i < pokemonTypes.length; i++) {
+        const pokemonType = pokemonTypes[i]['type']['name'];
         document.getElementById('type-container').innerHTML += templateType(pokemonType);
     }
 }
 
 
-function renderAboutBox(i, propertiesBox) {
-    let heigtInCm = allLoadedPokemon[i]['height'] * 10; // API gives heigt in decimeters
-    let weightInKg = allLoadedPokemon[i]['weight'] / 10; // because API gives weight in hectogram
+/**renders the properties in the pokemon detail card */
+function renderProperties(pokemon, choice) {
+
+    let propertiesBox = document.getElementById('properties-box');
+    propertiesBox.innerHTML = '';
+
+    if (choice == 'about') {
+        renderAboutBox(pokemon, propertiesBox);
+        document.getElementById('about').classList.add('navigation-active');
+    }
+    else if (choice == 'basestats') {
+        renderBaseStats(pokemon, propertiesBox);
+    }
+    else if (choice == 'evolution') {
+        renderEvolution(pokemon, propertiesBox);
+    }
+    else if (choice == 'moves') {
+        renderMoves(pokemon, propertiesBox);
+    }
+
+}
+
+
+function renderAboutBox(pokemon, propertiesBox) {
+    let heigtInCm = pokemon['height'] * 10; // API gives heigt in decimeters
+    let weightInKg = pokemon['weight'] / 10; // because API gives weight in hectogram
 
     propertiesBox.innerHTML = templateAboutBox(heigtInCm, weightInKg);
 
-    renderAbilities(i);
+    renderAbilities(pokemon);
 }
 
 
 /**
  * renders the abilities of one pokemon in the detail card
  * 
- * @param {integer} i This is the variable of current showed pokemon. 
+ * @param {object} pokemon This is the the current pokemon
  */
-function renderAbilities(i) {
+function renderAbilities(pokemon) {
     let abilitiesBox = document.getElementById('abilities-box');
-    let pokemonAbilities = allLoadedPokemon[i]['abilities'];
+    let pokemonAbilities = pokemon['abilities'];
     let lastAbilityID; // variable for searching the last ability. Is needet to remove the semicolon at the end of the abilities-list
 
     if (pokemonAbilities.length > 0) {
@@ -263,55 +280,48 @@ function renderAbilities(i) {
 }
 
 
-function renderBaseStats(i, propertiesBox) {
+function renderBaseStats(pokemon, propertiesBox) {
     propertiesBox.innerHTML = templateBaseStats();
 }
 
 
-function renderEvolution(i, propertiesBox) {
+function renderEvolution(pokemon, propertiesBox) {
     propertiesBox.innerHTML = templateEvolution();
 }
 
 
-function renderMoves(i, propertiesBox) {
+function renderMoves(pokemon, propertiesBox) {
     propertiesBox.innerHTML = templateMoves();
 }
 
 
-function favouriteOrUnfavourite(i, ID) {
+function favouriteOrUnfavourite(ID) {
     let positionOfFavouritePokemon = arrayPositionFavouritePokemon(ID);
+    let pokemon = allLoadedPokemon.find(pokemon => pokemon['id'] === ID)
 
     if (positionOfFavouritePokemon == -1) {
-        addToFavourites(i);
+        addToFavourites(pokemon);
     }
     else {
         removeFromFavourites(positionOfFavouritePokemon);
     }
-    sortPokemon(favouritePokemons);
     renderFavouriteIcon(ID);
     saveInLocalStorage();
 }
 
 
 function arrayPositionFavouritePokemon(ID) {
-    let positionInArray = -1; // -1 is the symbol if we don't find a Pokemon in Favourites
-
-    for (let j = 0; j < favouritePokemons.length; j++) {
-        if (favouritePokemons[j]['id'] == ID) {
-            positionInArray = j;
-        }
-    }
+    let positionInArray = favouritePokemons.findIndex(favPokemon => favPokemon['id'] === ID);
     return positionInArray;
 }
 
 
-function addToFavourites(i, icon) {
-    let toAddPokemon = allLoadedPokemon[i];
-    favouritePokemons.push(toAddPokemon);
+function addToFavourites(pokemon) {
+    favouritePokemons.push(pokemon);
 }
 
 
-function removeFromFavourites(positionOfFavouritePokemon, icon) {
+function removeFromFavourites(positionOfFavouritePokemon) {
     favouritePokemons.splice(positionOfFavouritePokemon, 1);
 }
 
@@ -352,28 +362,6 @@ function openOverlay() {
     document.getElementById('overlay').classList.remove('d-none');
 }
 
-
-/**renders the properties in the pokemon detail card */
-function renderProperties(i, choice) {
-
-    let propertiesBox = document.getElementById('properties-box');
-    propertiesBox.innerHTML = '';
-
-    if (choice == 'about') {
-        renderAboutBox(i, propertiesBox);
-        document.getElementById('about').classList.add('navigation-active');
-    }
-    else if (choice == 'basestats') {
-        renderBaseStats(i, propertiesBox);
-    }
-    else if (choice == 'evolution') {
-        renderEvolution(i, propertiesBox);
-    }
-    else if (choice == 'moves') {
-        renderMoves(i, propertiesBox);
-    }
-
-}
 
 /**
  * this function changes the underline of the navigation links in the detail card

@@ -1,0 +1,46 @@
+@media (max-width: 730px) {
+    .header {
+        padding: 0;
+    }
+
+    .header-box {
+        width: 100%;
+        border-radius: 0;
+        flex-direction: column;
+        background-color: #9494CF;
+    }
+
+    .search-box {
+        margin: 0;
+        width: 270px;
+    }
+
+    .header-icon-box {
+        gap: 24px;
+    }
+
+    .autocomplete {
+        width: 250px !important;
+    }
+
+}
+
+@media (max-width: 550px) {
+    .pokemon-box {
+        min-width: 250px;
+    }
+
+    #pokemon-detail-card {
+        width: 380px;
+    }
+}
+
+@media (max-width: 400px) {
+    .pokemon-box {
+        min-width: 250px;
+    }
+
+    #pokemon-detail-card {
+        width: 300px;
+    }
+}

@@ -5,12 +5,12 @@
 
 @font-face {
     font-family: 'pokemon-solid';
-    src: url('./fonts/Pokemon-Solid.ttf');
+    src: url('../fonts/Pokemon-Solid.ttf');
 }
 
 @font-face {
     font-family: 'pokemon-pocket-monk';
-    src: url('./fonts/pocket_monk.otf');
+    src: url('../fonts/pocket_monk.otf');
 }
 
 body {

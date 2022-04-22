@@ -21,37 +21,37 @@ function templateType(pokemonType) {
 }
 
 
-function templateDetailCard(i, pokemonColor, ID) {
+function templateDetailCard(pokemon, pokemonColor, ID) {
     return /*html*/ `
         <div id="pokemon-detail-card">
             <div class="pokemon-detail-card-top" style="background-color: ${pokemonColor}">
                 <div class="arrow-and-heart">
                     <img src="img/arrow-back.png" onclick="closeOverlay()" alt="closeArrow">
-                    <img id='favourite-icon-detailcard' src="" onclick="favouriteOrUnfavourite(${i}, ${ID})">
+                    <img id='favourite-icon-detailcard' src="" onclick="favouriteOrUnfavourite(${ID})">
                 </div>
                 <div class="name-types-id-box">
                     <div class="name-types-box">
                         <h1>
-                            ${allLoadedPokemon[i]['name']}
+                            ${pokemon['name']}
                         </h1>
                         <div id="type-container">
                             <!-- here we render with for all the types -->
                         </div>
                     </div>
                     <span class="pokemon-id">
-                        #${('0' + '0' + allLoadedPokemon[i]['id']).slice(-3)}
+                        #${('0' + '0' + ID).slice(-3)}
                     </span>
                 </div>
             </div>
             <div class="pokemon-detail-card-bottom">
                 <div class="pokemon-image-box">
-                    <img class="pokemon-image" src="${allLoadedPokemon[i]['sprites']['other']['home']['front_default']}" alt="pokemonimage">
+                    <img class="pokemon-image" src="${pokemon['sprites']['other']['home']['front_default']}" alt="pokemonimage">
                 </div>
                 <div class="choose-properties">
-                    <h4 class="navigation-link" id="about" onclick="renderProperties(${i}, 'about'); changeNavigation(this)">about</h4>
-                    <h4 class="navigation-link" id="basestats" onclick="renderProperties(${i}, 'basestats'); changeNavigation(this)">basestats</h4>
-                    <h4 class="navigation-link" id="evolution" onclick="renderProperties(${i}, 'evolution'); changeNavigation(this)">evolution</h4>
-                    <h4 class="navigation-link" id="moves" onclick="renderProperties(${i}, 'moves'); changeNavigation(this)">moves</h4>
+                    <h4 class="navigation-link" id="about" onclick="renderProperties(${ID}, 'about'); changeNavigation(this)">about</h4>
+                    <h4 class="navigation-link" id="basestats" onclick="renderProperties(${ID}, 'basestats'); changeNavigation(this)">basestats</h4>
+                    <h4 class="navigation-link" id="evolution" onclick="renderProperties(${ID}, 'evolution'); changeNavigation(this)">evolution</h4>
+                    <h4 class="navigation-link" id="moves" onclick="renderProperties(${ID}, 'moves'); changeNavigation(this)">moves</h4>
                 </div>
                 <div id="properties-box">
                     <!-- rendered with an own function -->
