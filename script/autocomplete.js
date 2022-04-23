@@ -34,7 +34,7 @@ function autocomplete(inp, arr) {
                     (or any other open lists of autocompleted values:*/
                     closeAllLists();
                     /*renders the in the autocomplete found pokemon*/
-                    renderSearchedPokemon();
+                    getSearchedPokemon();
                 });
                 a.appendChild(b);
             }

@@ -18,6 +18,7 @@
     <script src="script/script.js"></script>
     <script src="script/templates.js"></script>
     <script src="script/autocomplete.js"></script>
+    <script src="script/detailcard.js"></script>
 
 
 </head>
@@ -31,7 +32,7 @@
 
                 <form autocomplete="off" action="/action_page.php">
                     <div class="autocomplete" style="width: 300px;">
-                        <img onclick="renderSearchedPokemon()" id="magnifying-glass" src="img/magnifying-glass-3-24.png" alt="">
+                        <img onclick="getSearchedPokemon()" id="magnifying-glass" src="img/magnifying-glass-3-24.png" alt="">
                         <input type="text" id="myInput" placeholder="Suchen">
                         <img id="delete-search-input" onclick="deleteSearchInput()" src="img/close-window-24.png" alt="">
                         </div>

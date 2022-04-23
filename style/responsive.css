@@ -20,7 +20,11 @@
     }
 
     .autocomplete {
-        width: 250px !important;
+        width: 230px !important;
+    }
+
+    .search-box input {
+        margin-left: 8px;
     }
 
 }
