@@ -17,6 +17,10 @@
 
     .header-icon-box {
         gap: 24px;
+        margin: 12px;
+        padding: 12px;
+        background-color: #B8B8DD;
+        border-radius: 8px;
     }
 
     .autocomplete {
@@ -32,7 +36,7 @@
 
 @media (max-width: 550px) {
     .pokemon-box {
-        min-width: 250px;
+        min-width: 240px;
     }
 
     #pokemon-detail-card {
@@ -45,8 +49,16 @@
 }
 
 @media (max-width: 400px) {
-    .pokemon-box {
-        min-width: 250px;
+    .search-box {
+        width: 250px;
+    }
+
+    .autocomplete {
+        width: 150px !important;
+    }
+
+    .search-box input {
+        margin-right: -30px;
     }
 
     .pokemon-detail-card-bottom {
@@ -61,5 +73,8 @@
     .pokemon-stat {
         font-size: 14px;
     }
-    
+
+    h1 {
+        font-size: 30px !important;
+    }
 }
