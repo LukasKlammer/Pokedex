@@ -71,7 +71,12 @@ function renderProperties(ID, choice) {
 
 }
 
-
+/**
+ * renders the box with the about properties
+ * 
+ * @param {object} pokemon the pokemon object from which we would render the properties
+ * @param {div} propertiesBox the container, that we fill with innerHTML syntax
+ */
 function renderAboutBox(pokemon, propertiesBox) {
     let heigtInCm = pokemon['height'] * 10; // API gives heigt in decimeters
     let weightInKg = pokemon['weight'] / 10; // because API gives weight in hectogram
@@ -105,6 +110,12 @@ function renderAbilities(pokemon) {
 }
 
 
+/**
+ * renders the basestats from the pokemon in the detail card
+ * 
+ * @param {object} pokemon the pokemon object from which we would render the properties
+ * @param {div} propertiesBox the container, that we fill with innerHTML syntax
+ */
 function renderBaseStats(pokemon, propertiesBox) {
     let pokemonStats = pokemon['stats'];
     for (let i = 0; i < pokemonStats.length; i++) {
