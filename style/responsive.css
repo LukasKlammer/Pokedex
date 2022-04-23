@@ -38,6 +38,10 @@
     #pokemon-detail-card {
         width: 380px;
     }
+
+    .choose-properties {
+        justify-content: space-around;
+    }
 }
 
 @media (max-width: 400px) {
@@ -45,7 +49,17 @@
         min-width: 250px;
     }
 
-    #pokemon-detail-card {
-        width: 300px;
+    .pokemon-detail-card-bottom {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
     }
+
+    #pokemon-detail-card {
+        width: 100%;
+    }
+
+    .pokemon-stat {
+        font-size: 14px;
+    }
+    
 }
