@@ -13,14 +13,14 @@
 #pokemon-detail-card {
     z-index: 10;
     width: 500px;
-    height: 800px;
+    height: 700px;
     border-radius: 22px;
     display: flex;
     flex-direction: column;
 }
 
 .pokemon-detail-card-top {
-    height: 40%;
+    height: 50%;
     padding: 30px;
     padding-top: 48px;
     border-top-left-radius: 22px;
@@ -92,6 +92,11 @@
     transform: scale(1.05);
 }
 
+.navigation-link {
+    margin-block-start: 10px !important;
+    margin-block-end: 10px !important;
+}
+
 .navigation-active {
     font-weight: bold;
     border-bottom: 2px solid black !important;
@@ -106,7 +111,7 @@ table tr td:first-child {
     display: flex;
     align-items: center;
     gap: 12px;
-    height: 45px;
+    height: 40px;
 }
 
 .pokemon-stat-name {

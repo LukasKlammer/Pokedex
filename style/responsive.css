@@ -1,4 +1,5 @@
 @media (max-width: 730px) {
+    
     .header {
         padding: 0;
     }
@@ -28,13 +29,25 @@
     }
 
     .search-box input {
-        margin-left: 8px;
-        margin-right: -8px;
+        margin-left: 5px;
     }
 
 }
 
 @media (max-width: 550px) {
+    .search-box {
+        width: 250px;
+    }
+
+    .autocomplete {
+        width: 150px !important;
+    }
+
+    #myInput {
+        width: 180px !important;
+        margin-right: 8px;
+    }
+    
     .pokemon-box {
         min-width: 240px;
     }
@@ -49,17 +62,6 @@
 }
 
 @media (max-width: 400px) {
-    .search-box {
-        width: 250px;
-    }
-
-    .autocomplete {
-        width: 150px !important;
-    }
-
-    .search-box input {
-        margin-right: -30px;
-    }
 
     .pokemon-detail-card-bottom {
         padding-left: 10px !important;
@@ -74,7 +76,4 @@
         font-size: 14px;
     }
 
-    h1 {
-        font-size: 30px !important;
-    }
 }
