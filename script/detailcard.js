@@ -110,24 +110,8 @@ function renderBaseStats(pokemon, propertiesBox) {
     for (let i = 0; i < pokemonStats.length; i++) {
         const baseStatName = pokemonStats[i]['stat']['name'];
         const baseStatValue = pokemonStats[i]['base_stat'];
-        const percent = (baseStatValue/255) * 100; // in my recherche i found that max. value for baseStats is 255  https://bulbapedia.bulbagarden.net/wiki/Base_stats#:~:text=A%20species'%20base%20stats%20range,Pok%C3%A9mon%20species%20has%20in%20battle.
-        propertiesBox.innerHTML += /*html*/ `
-
-            <div class="pokemon-stat">
-                <span class="pokemon-stat-name">
-                    ${baseStatName}
-                </span>
-                <div class="progress">
-                    <div class="progress-bar" id="progress-bar-${baseStatName}" role="progressbar" style="width: ${percent}%">
-                        ${baseStatValue}
-                    </div>
-                </div>
-                <span>
-                    255
-                </span>
-            </div>
-        
-        `;
+        const percentage = (baseStatValue/255) * 100; // in my recherche i found that max. value for baseStats is 255  https://bulbapedia.bulbagarden.net/wiki/Base_stats#:~:text=A%20species'%20base%20stats%20range,Pok%C3%A9mon%20species%20has%20in%20battle.
+        propertiesBox.innerHTML += templateBaseStats(baseStatName, baseStatValue, percentage);
     }
 }
 

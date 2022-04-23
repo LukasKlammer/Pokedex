@@ -88,9 +88,20 @@ function templateAbilities(j, pokemonAbility) {
 }
 
 
-function templateBaseStats(pokemonStatName, pokemonStat) {
+function templateBaseStats(baseStatName, baseStatValue, percentage) {
     return /*html*/ `
-
-
-    `;
+    <div class="pokemon-stat">
+        <span class="pokemon-stat-name">
+            ${baseStatName}
+        </span>
+        <div class="progress">
+            <div class="progress-bar" id="progress-bar-${baseStatName}" role="progressbar" style="width: ${percentage}%">
+                ${baseStatValue}
+            </div>
+        </div>
+        <span>
+            255
+        </span>
+    </div>
+`;
 }
