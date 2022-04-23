@@ -90,6 +90,7 @@ function templateAbilities(j, pokemonAbility) {
 
 function templateBaseStats(pokemonStatName, pokemonStat) {
     return /*html*/ `
-        <span>${pokemonStatName}: </span><span> ${pokemonStat}</span><br>
+
+
     `;
 }

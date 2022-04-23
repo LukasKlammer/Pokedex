@@ -29,7 +29,6 @@
         <div class="header-box">
             <h1 class="headline" onclick="renderHomeScreen()">Pokedex</h1>
             <div class="search-box">
-
                 <form autocomplete="off" action="/action_page.php">
                     <div class="autocomplete" style="width: 300px;">
                         <img onclick="getSearchedPokemon()" id="magnifying-glass" src="img/magnifying-glass-3-24.png" alt="">
@@ -37,15 +36,6 @@
                         <img id="delete-search-input" onclick="deleteSearchInput()" src="img/close-window-24.png" alt="">
                         </div>
                     </form>
-
-
-                <!-- <img id="magnifying-glass" src="img/magnifying-glass-3-24.png" alt="">
-                <input onclick="hideMagnifyingGlass()" onkeyup="renderSearchedPokemon()"
-                    onfocusout="showMagnifyingGlass()" type="text" id="search-input" placeholder="Suchen">
-                <img id="delete-search-input" onclick="deleteSearchInput()" src="img/close-window-24.png" alt=""> -->
-
-
-
             </div>
             <div class="header-icon-box">
                 <img onclick="renderHomeScreen()" src="img/pokeball.png" alt="">
