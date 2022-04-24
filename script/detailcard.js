@@ -4,7 +4,7 @@
  * @param {div} detailCardContainer the container, that we fill with innerHTML syntax
  * @param {number} ID from the to render pokemon
  */
- async function renderDetailCard(detailCardContainer, ID) {
+async function renderDetailCard(detailCardContainer, ID) {
     await loadPokemonIfMissing(ID);
     let pokemon = allLoadedPokemon.find(pokemon => pokemon['id'] === ID);
     let type = pokemon['types'][0]['type']['name'];
@@ -55,20 +55,23 @@ function renderProperties(ID, choice) {
     let propertiesBox = document.getElementById('properties-box');
     propertiesBox.innerHTML = '';
 
-    if (choice == 'about') {
-        renderAboutBox(pokemon, propertiesBox);
-        document.getElementById('about').classList.add('navigation-active');
+    switch (choice) {
+        case 'about':
+            renderAboutBox(pokemon, propertiesBox);
+            document.getElementById('about').classList.add('navigation-active');
+            break;
+        case 'basestats':
+            renderBaseStats(pokemon, propertiesBox);
+            break;
+        case 'evolution': // intended for eventual expansion of the app
+            renderEvolution(pokemon, propertiesBox);
+            break;
+        case 'moves': // intended for eventual expansion of the app
+            renderMoves(pokemon, propertiesBox);
+            break;
+        default:
+            alert('error: false input in swith case block');
     }
-    else if (choice == 'basestats') {
-        renderBaseStats(pokemon, propertiesBox);
-    }
-    else if (choice == 'evolution') {
-        renderEvolution(pokemon, propertiesBox);
-    }
-    else if (choice == 'moves') {
-        renderMoves(pokemon, propertiesBox);
-    }
-
 }
 
 /**
@@ -121,7 +124,7 @@ function renderBaseStats(pokemon, propertiesBox) {
     for (let i = 0; i < pokemonStats.length; i++) {
         const baseStatName = pokemonStats[i]['stat']['name'];
         const baseStatValue = pokemonStats[i]['base_stat'];
-        const percentage = (baseStatValue/255) * 100; // in my recherche i found that max. value for baseStats is 255  https://bulbapedia.bulbagarden.net/wiki/Base_stats#:~:text=A%20species'%20base%20stats%20range,Pok%C3%A9mon%20species%20has%20in%20battle.
+        const percentage = (baseStatValue / 255) * 100; // in my recherche i found that max. value for baseStats is 255  https://bulbapedia.bulbagarden.net/wiki/Base_stats#:~:text=A%20species'%20base%20stats%20range,Pok%C3%A9mon%20species%20has%20in%20battle.
         propertiesBox.innerHTML += templateBaseStats(baseStatName, baseStatValue, percentage);
     }
 }
@@ -153,7 +156,7 @@ function favouriteOrUnfavourite(ID) {
  * @param {number} ID from the pokemon that we would find
  * @returns {number} returns the position of the pokemon in the favouritePokemons-array
  */
- function arrayPositionFavouritePokemon(ID) {
+function arrayPositionFavouritePokemon(ID) {
     let positionInArray = favouritePokemons.findIndex(favPokemon => favPokemon['id'] === ID);
     return positionInArray;
 }
@@ -174,7 +177,7 @@ function removeFromFavourites(positionOfFavouritePokemon) {
  * 
  * @param {string} clickedElement name of clicked link
  */
- function changeNavigation(clickedElement) {
+function changeNavigation(clickedElement) {
     const links = document.getElementsByClassName('navigation-link')
     for (const link of links) {
         link.classList.remove('navigation-active')

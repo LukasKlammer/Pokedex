@@ -74,7 +74,6 @@ async function loadPokemons() {
             allLoadedPokemon.push(foundPokemon);
         }
     }
-    console.log(allLoadedPokemon);
 }
 
 

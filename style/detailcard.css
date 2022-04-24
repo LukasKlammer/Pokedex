@@ -20,9 +20,9 @@
 }
 
 .pokemon-detail-card-top {
-    height: 50%;
+    height: 290px;
     padding: 30px;
-    padding-top: 48px;
+    padding-top: 35px;
     border-top-left-radius: 22px;
     border-top-right-radius: 22px;
     color: white;
