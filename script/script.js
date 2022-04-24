@@ -144,7 +144,7 @@ function renderPokemonTypes(pokemonID, pokemonTypes) {
 
 /**when you are near the bottom of Site --> load more Pokemons */
 function lazyLoading() {
-    if ((window.innerHeight + window.scrollY + 300) >= document.body.offsetHeight && allowLoadNextPokemons) {
+    if ((window.innerHeight + window.scrollY + 400) >= document.body.offsetHeight && allowLoadNextPokemons) {
         allowLoadNextPokemons = false;
         loadMorePokemon();
     }
