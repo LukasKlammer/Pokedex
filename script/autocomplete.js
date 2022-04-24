@@ -7,7 +7,11 @@ function autocomplete(inp, arr) {
         var a, b, i, val = this.value;
         /*close any already open lists of autocompleted values*/
         closeAllLists();
-        if (!val) { return false; }
+        /*by myself added function: when you delete input or input is already empty - go to home screen*/
+        if (!val) {
+            renderHomeScreen();
+            return false;
+        }
         currentFocus = -1;
         /*create a DIV element that will contain the items (values):*/
         a = document.createElement("DIV");
@@ -33,7 +37,7 @@ function autocomplete(inp, arr) {
                     /*close the list of autocompleted values,
                     (or any other open lists of autocompleted values:*/
                     closeAllLists();
-                    /*renders the in the autocomplete found pokemon*/
+                    /*by myself addet function: renders the in the autocomplete found pokemon*/
                     getSearchedPokemon();
                 });
                 a.appendChild(b);
