@@ -46,11 +46,21 @@ h1 {
     background-color: rgb(184, 184, 221);
 }
 
+.headline-box {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.pokedex-mobile-img {
+    height: 70px;
+    padding-left: 20px;
+}
+
 .headline {
     margin: 24px;
     font-family: 'pokemon-pocket-monk';
     font-size: 40px;
-    cursor: pointer;
 }
 
 .search-box {
