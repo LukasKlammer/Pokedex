@@ -119,6 +119,10 @@ h1 {
     gap: 12px;
 }
 
+.loading-gif {
+    width: 100%;
+}
+
 .pokemon-box {
     position: relative;
     background-color: #70C1B3;

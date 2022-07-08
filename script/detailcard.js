@@ -5,6 +5,7 @@
  * @param {number} ID from the to render pokemon
  */
 async function renderDetailCard(detailCardContainer, ID) {
+    detailCardContainer.innerHTML = templateLoadingDetailCard();
     await loadPokemonIfMissing(ID);
     let pokemon = allLoadedPokemon.find(pokemon => pokemon['id'] === ID);
     let type = pokemon['types'][0]['type']['name'];

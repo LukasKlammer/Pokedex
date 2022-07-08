@@ -21,6 +21,13 @@ function templateType(pokemonType) {
 }
 
 
+function templateLoadingDetailCard() {
+    return /*html*/ `
+        <img class="loading-gif" src="img/loading.gif" alt="loading-gif">
+    `;
+}
+
+
 function templateDetailCard(pokemon, pokemonColor, ID) {
     return /*html*/ `
         <div id="pokemon-detail-card">
